@@ -13,31 +13,37 @@ interface PingModalProps {
 export default function PingModal({ user, onPing, onClose }: PingModalProps) {
   return (
     <div
-      className="fixed inset-0 bg-soft-purple-deeper/60 backdrop-blur-sm z-[100] flex items-end justify-center"
+      className="fixed inset-0 z-[100] flex items-center justify-center px-5"
+      style={{ background: "rgba(45, 34, 84, 0.6)", backdropFilter: "blur(8px)" }}
       onClick={onClose}
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="bg-white rounded-t-softest w-full max-w-[430px] px-5 pt-6 pb-9 animate-slideUp"
+        className="bg-white w-full max-w-[380px] px-5 pt-6 pb-7 animate-slideUp"
+        style={{ borderRadius: "24px" }}
       >
         {/* User info */}
         <div className="flex items-center gap-3.5 mb-5">
           <div
             className="w-[52px] h-[52px] rounded-soft flex items-center justify-center text-white text-xl font-bold font-display"
-            style={{
-              background: `linear-gradient(135deg, ${user.color}, ${user.color}88)`,
-            }}
+            style={{ background: `linear-gradient(135deg, ${user.color}, ${user.color}88)` }}
           >
             {user.initials}
           </div>
           <div>
-            <p className="font-bold text-lg text-soft-purple-deeper">{user.name}</p>
-            <p className="text-[13px] text-soft-muted mt-0.5 font-medium">{user.vibe}</p>
+            <p className="font-bold text-lg text-soft-purple-deeper">
+              {user.name}
+            </p>
+            <p className="text-[13px] text-soft-muted mt-0.5 font-medium">
+              {user.vibe}
+            </p>
           </div>
         </div>
 
         {/* Ping prompts */}
-        <p className="text-[13px] font-bold text-soft-purple-deep mb-3">Send a ping</p>
+        <p className="text-[13px] font-bold text-soft-purple-deep mb-3">
+          Send a ping
+        </p>
         <div className="flex flex-col gap-2">
           {PING_PROMPTS.map((prompt) => (
             <button
