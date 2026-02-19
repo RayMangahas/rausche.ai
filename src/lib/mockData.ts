@@ -72,9 +72,27 @@ export const PING_PROMPTS = [
 // ─── Active Rooms ────────────────────────────────────────────────
 
 export const ACTIVE_ROOMS: LiveRoom[] = [
-  { id: 1, name: "Cute Pets Show & Tell", people: 12, icon: "🐾", community: "Cats" },
-  { id: 2, name: "Wholesome Jokes Only", people: 8, icon: "😂", community: "Jokes" },
-  { id: 3, name: "Golden Hour Photos", people: 5, icon: "📸", community: "Photos" },
+  {
+    id: 1,
+    name: "Cute Pets Show & Tell",
+    people: 12,
+    icon: "🐾",
+    community: "Cats",
+  },
+  {
+    id: 2,
+    name: "Happiest Memories",
+    people: 8,
+    icon: "🐶",
+    community: "Dogs",
+  },
+  {
+    id: 3,
+    name: "Golden Hour Photos",
+    people: 5,
+    icon: "📸",
+    community: "Photos",
+  },
 ];
 
 // ─── Community Posts ─────────────────────────────────────────────
@@ -98,17 +116,17 @@ export const COMMUNITY_POSTS: CommunityPost[] = [
   },
   {
     id: 2,
-    community: "Jokes",
-    memberCount: "3.8K",
-    icon: "😂",
+    community: "Dogs",
+    memberCount: "4.7K",
+    icon: "🐶",
     color: "#2D4A30",
     post: {
-      prompt: "What's a joke that always makes you laugh no matter what?",
+      prompt: "What's your happiest memory with your dog?",
       responseCount: 156,
       activeNow: 14,
       topResponses: [
-        "Why don't scientists trust atoms? Because they make up everything",
-        "I told my WiFi we need to talk. It said it felt a weak connection",
+        "The day I brought him home and he fell asleep in my lap on the car ride",
+        "Teaching her to swim at the lake — she was so proud of herself",
       ],
     },
   },

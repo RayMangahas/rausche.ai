@@ -1,9 +1,26 @@
 export default function CommunityPage() {
   const communities = [
-    { name: "Cats", members: "5.2K", icon: "🐱", color: "#4A3070", desc: "Everything cats — pics, stories, and purrs" },
-    { name: "Jokes", members: "3.8K", icon: "😂", color: "#2D4A30", desc: "Wholesome laughs to brighten your day" },
-    { name: "Photos", members: "4.1K", icon: "📸", color: "#4A3040", desc: "Share what you see through your lens" },
-    { name: "Dogs", members: "4.7K", icon: "🐶", color: "#3A2E1E", desc: "Good boys, good girls, good vibes" },
+    {
+      name: "Cats",
+      members: "5.2K",
+      icon: "🐱",
+      color: "#4A3070",
+      desc: "Everything cats — pics, stories, and purrs",
+    },
+    {
+      name: "Dogs",
+      members: "4.7K",
+      icon: "🐶",
+      color: "#2D4A30",
+      desc: "Good doggos and good vibes",
+    },
+    {
+      name: "Photos",
+      members: "4.1K",
+      icon: "📸",
+      color: "#4A3040",
+      desc: "Share what you see through your lens",
+    },
   ];
 
   return (
@@ -30,10 +47,14 @@ export default function CommunityPage() {
             <div className="p-4 pb-3" style={{ backgroundColor: c.color }}>
               <span className="text-2xl">{c.icon}</span>
               <p className="font-bold text-sm text-white mt-2">{c.name}</p>
-              <p className="text-[11px] text-white/60 mt-0.5">{c.members} members</p>
+              <p className="text-[11px] text-white/60 mt-0.5">
+                {c.members} members
+              </p>
             </div>
             <div className="bg-white p-3">
-              <p className="text-xs text-soft-muted font-medium leading-snug">{c.desc}</p>
+              <p className="text-xs text-soft-muted font-medium leading-snug">
+                {c.desc}
+              </p>
             </div>
           </div>
         ))}
