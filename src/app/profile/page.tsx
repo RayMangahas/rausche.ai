@@ -1,29 +1,24 @@
 "use client";
 
 import { useState } from "react";
+import { useProfile } from "@/lib/ProfileContext";
 
 function wordCount(text: string) {
   return text.trim() === "" ? 0 : text.trim().split(/\s+/).length;
 }
 
 export default function ProfilePage() {
-  // Profile info
-  const [name, setName] = useState("Ray");
-  const [username, setUsername] = useState("you");
-  const [nameDraft, setNameDraft] = useState("Ray");
-  const [usernameDraft, setUsernameDraft] = useState("you");
+  const { profile, setProfile } = useProfile();
+
+  // Edit profile modal
+  const [nameDraft, setNameDraft] = useState(profile.name);
+  const [usernameDraft, setUsernameDraft] = useState(profile.username);
   const [editingProfile, setEditingProfile] = useState(false);
 
-  // Draft state
+  // Question editing
   const [q1Draft, setQ1Draft] = useState("");
   const [q2Draft, setQ2Draft] = useState("");
   const [qualitiesDraft, setQualitiesDraft] = useState(["", "", ""]);
-
-  // Saved state
-  const [q1Saved, setQ1Saved] = useState("");
-  const [q2Saved, setQ2Saved] = useState("");
-  const [qualitiesSaved, setQualitiesSaved] = useState(["", "", ""]);
-
   const [editing, setEditing] = useState<string | null>(null);
 
   const handleQ1Change = (val: string) => {
@@ -43,16 +38,16 @@ export default function ProfilePage() {
   };
 
   const startEditing = (field: string) => {
-    if (field === "q1") setQ1Draft(q1Saved);
-    if (field === "q2") setQ2Draft(q2Saved);
-    if (field === "q3") setQualitiesDraft([...qualitiesSaved]);
+    if (field === "q1") setQ1Draft(profile.q1);
+    if (field === "q2") setQ2Draft(profile.q2);
+    if (field === "q3") setQualitiesDraft([...profile.qualities]);
     setEditing(field);
   };
 
   const handleSave = () => {
-    if (editing === "q1") setQ1Saved(q1Draft);
-    if (editing === "q2") setQ2Saved(q2Draft);
-    if (editing === "q3") setQualitiesSaved([...qualitiesDraft]);
+    if (editing === "q1") setProfile({ q1: q1Draft });
+    if (editing === "q2") setProfile({ q2: q2Draft });
+    if (editing === "q3") setProfile({ qualities: [...qualitiesDraft] });
     setEditing(null);
   };
 
@@ -61,14 +56,13 @@ export default function ProfilePage() {
   };
 
   const openEditProfile = () => {
-    setNameDraft(name);
-    setUsernameDraft(username);
+    setNameDraft(profile.name);
+    setUsernameDraft(profile.username);
     setEditingProfile(true);
   };
 
   const saveProfile = () => {
-    setName(nameDraft);
-    setUsername(usernameDraft);
+    setProfile({ name: nameDraft, username: usernameDraft });
     setEditingProfile(false);
   };
 
@@ -77,13 +71,13 @@ export default function ProfilePage() {
       {/* Profile header */}
       <div className="flex items-center gap-4 mb-3">
         <div className="w-16 h-16 rounded-soft bg-gradient-to-br from-soft-purple to-soft-lavender flex items-center justify-center text-white text-2xl font-bold font-display">
-          {name.charAt(0).toUpperCase()}
+          {profile.name.charAt(0).toUpperCase()}
         </div>
         <div className="flex-1">
           <h1 className="font-display font-bold text-xl text-soft-purple-deeper">
-            {name}
+            {profile.name}
           </h1>
-          <p className="text-soft-muted text-sm font-medium">@{username}</p>
+          <p className="text-soft-muted text-sm font-medium">@{profile.username}</p>
         </div>
       </div>
 
@@ -142,32 +136,17 @@ export default function ProfilePage() {
                     {wordCount(q1Draft)} / 200 words
                   </p>
                   <div className="flex gap-2">
-                    <button
-                      onClick={handleCancel}
-                      className="text-[12px] text-soft-muted font-semibold px-3 py-1 rounded-lg hover:bg-soft-lavender-bg transition-colors"
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      onClick={handleSave}
-                      className="text-[12px] text-white font-semibold px-4 py-1 rounded-lg bg-soft-purple hover:bg-soft-purple-dark transition-colors"
-                    >
-                      Save
-                    </button>
+                    <button onClick={handleCancel} className="text-[12px] text-soft-muted font-semibold px-3 py-1 rounded-lg hover:bg-soft-lavender-bg transition-colors">Cancel</button>
+                    <button onClick={handleSave} className="text-[12px] text-white font-semibold px-4 py-1 rounded-lg bg-soft-purple hover:bg-soft-purple-dark transition-colors">Save</button>
                   </div>
                 </div>
               </div>
             ) : (
-              <div
-                onClick={() => startEditing("q1")}
-                className="bg-soft-lavender-bg rounded-xl px-3.5 py-3 text-[13px] leading-relaxed font-medium border-l-[3px] border-soft-lavender cursor-pointer hover:bg-soft-lavender-light transition-colors min-h-[44px]"
-              >
-                {q1Saved ? (
-                  <span className="text-soft-purple-deeper">{q1Saved}</span>
+              <div onClick={() => startEditing("q1")} className="bg-soft-lavender-bg rounded-xl px-3.5 py-3 text-[13px] leading-relaxed font-medium border-l-[3px] border-soft-lavender cursor-pointer hover:bg-soft-lavender-light transition-colors min-h-[44px]">
+                {profile.q1 ? (
+                  <span className="text-soft-purple-deeper">{profile.q1}</span>
                 ) : (
-                  <span className="text-soft-muted-light italic">
-                    Tap to answer...
-                  </span>
+                  <span className="text-soft-muted-light italic">Tap to answer...</span>
                 )}
               </div>
             )}
@@ -176,8 +155,7 @@ export default function ProfilePage() {
           {/* Q2 */}
           <div>
             <p className="text-[13px] font-bold text-soft-purple-deep mb-1.5">
-              What&apos;s a non-school topic you&apos;ve explored deeply just
-              because you were curious?
+              What&apos;s a non-school topic you&apos;ve explored deeply just because you were curious?
             </p>
             {editing === "q2" ? (
               <div>
@@ -193,32 +171,17 @@ export default function ProfilePage() {
                     {wordCount(q2Draft)} / 200 words
                   </p>
                   <div className="flex gap-2">
-                    <button
-                      onClick={handleCancel}
-                      className="text-[12px] text-soft-muted font-semibold px-3 py-1 rounded-lg hover:bg-soft-lavender-bg transition-colors"
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      onClick={handleSave}
-                      className="text-[12px] text-white font-semibold px-4 py-1 rounded-lg bg-soft-purple hover:bg-soft-purple-dark transition-colors"
-                    >
-                      Save
-                    </button>
+                    <button onClick={handleCancel} className="text-[12px] text-soft-muted font-semibold px-3 py-1 rounded-lg hover:bg-soft-lavender-bg transition-colors">Cancel</button>
+                    <button onClick={handleSave} className="text-[12px] text-white font-semibold px-4 py-1 rounded-lg bg-soft-purple hover:bg-soft-purple-dark transition-colors">Save</button>
                   </div>
                 </div>
               </div>
             ) : (
-              <div
-                onClick={() => startEditing("q2")}
-                className="bg-soft-lavender-bg rounded-xl px-3.5 py-3 text-[13px] leading-relaxed font-medium border-l-[3px] border-soft-lavender cursor-pointer hover:bg-soft-lavender-light transition-colors min-h-[44px]"
-              >
-                {q2Saved ? (
-                  <span className="text-soft-purple-deeper">{q2Saved}</span>
+              <div onClick={() => startEditing("q2")} className="bg-soft-lavender-bg rounded-xl px-3.5 py-3 text-[13px] leading-relaxed font-medium border-l-[3px] border-soft-lavender cursor-pointer hover:bg-soft-lavender-light transition-colors min-h-[44px]">
+                {profile.q2 ? (
+                  <span className="text-soft-purple-deeper">{profile.q2}</span>
                 ) : (
-                  <span className="text-soft-muted-light italic">
-                    Tap to answer...
-                  </span>
+                  <span className="text-soft-muted-light italic">Tap to answer...</span>
                 )}
               </div>
             )}
@@ -251,43 +214,21 @@ export default function ProfilePage() {
                   ))}
                 </div>
                 <div className="flex justify-end gap-2 mt-2.5">
-                  <button
-                    onClick={handleCancel}
-                    className="text-[12px] text-soft-muted font-semibold px-3 py-1 rounded-lg hover:bg-soft-lavender-bg transition-colors"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    onClick={handleSave}
-                    className="text-[12px] text-white font-semibold px-4 py-1 rounded-lg bg-soft-purple hover:bg-soft-purple-dark transition-colors"
-                  >
-                    Save
-                  </button>
+                  <button onClick={handleCancel} className="text-[12px] text-soft-muted font-semibold px-3 py-1 rounded-lg hover:bg-soft-lavender-bg transition-colors">Cancel</button>
+                  <button onClick={handleSave} className="text-[12px] text-white font-semibold px-4 py-1 rounded-lg bg-soft-purple hover:bg-soft-purple-dark transition-colors">Save</button>
                 </div>
               </div>
             ) : (
-              <div
-                onClick={() => startEditing("q3")}
-                className="cursor-pointer"
-              >
-                {qualitiesSaved.some((q) => q) ? (
+              <div onClick={() => startEditing("q3")} className="cursor-pointer">
+                {profile.qualities.some((q) => q) ? (
                   <div className="flex flex-wrap gap-2">
-                    {qualitiesSaved
-                      .filter((q) => q)
-                      .map((q, i) => (
-                        <span
-                          key={i}
-                          className="bg-soft-lavender-bg rounded-full px-3.5 py-1.5 text-xs font-semibold text-soft-purple border border-soft-lavender"
-                        >
-                          {q}
-                        </span>
-                      ))}
+                    {profile.qualities.filter((q) => q).map((q, i) => (
+                      <span key={i} className="bg-soft-lavender-bg rounded-full px-3.5 py-1.5 text-xs font-semibold text-soft-purple border border-soft-lavender">{q}</span>
+                    ))}
                   </div>
                 ) : (
                   <div className="bg-soft-lavender-bg rounded-xl px-3.5 py-3 text-[13px] leading-relaxed font-medium border-l-[3px] border-soft-lavender hover:bg-soft-lavender-light transition-colors min-h-[44px]">
-                    <span className="text-soft-muted-light italic">
-                      Tap to add qualities...
-                    </span>
+                    <span className="text-soft-muted-light italic">Tap to add qualities...</span>
                   </div>
                 )}
               </div>
@@ -307,25 +248,11 @@ export default function ProfilePage() {
         ].map((item, i) => (
           <div
             key={item.label}
-            className={`flex items-center gap-3 px-4 py-3.5 cursor-pointer hover:bg-soft-lavender-bg transition-colors ${
-              i < 4 ? "border-b border-soft-lavender-border" : ""
-            }`}
+            className={`flex items-center gap-3 px-4 py-3.5 cursor-pointer hover:bg-soft-lavender-bg transition-colors ${i < 4 ? "border-b border-soft-lavender-border" : ""}`}
           >
             <span className="text-lg">{item.icon}</span>
-            <span className="text-sm font-semibold text-soft-purple-deeper flex-1">
-              {item.label}
-            </span>
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="#B0A6CC"
-              strokeWidth="2"
-              strokeLinecap="round"
-            >
-              <path d="M9 18l6-6-6-6" />
-            </svg>
+            <span className="text-sm font-semibold text-soft-purple-deeper flex-1">{item.label}</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#B0A6CC" strokeWidth="2" strokeLinecap="round"><path d="M9 18l6-6-6-6" /></svg>
           </div>
         ))}
       </div>
@@ -334,7 +261,7 @@ export default function ProfilePage() {
         SoftSpace v0.1.0 · Made with 💜
       </p>
 
-      {/* Edit Profile Modal - Centered */}
+      {/* Edit Profile Modal */}
       {editingProfile && (
         <div
           className="fixed inset-0 z-[100] flex items-center justify-center px-5"
@@ -346,71 +273,31 @@ export default function ProfilePage() {
             className="bg-white w-full max-w-[380px] px-5 pt-6 pb-7"
             style={{ borderRadius: "24px" }}
           >
-            <h2 className="font-display font-bold text-lg text-soft-purple-deeper mb-5">
-              Edit Profile
-            </h2>
+            <h2 className="font-display font-bold text-lg text-soft-purple-deeper mb-5">Edit Profile</h2>
 
-            {/* Avatar */}
             <div className="flex justify-center mb-5">
               <div className="w-20 h-20 rounded-soft bg-gradient-to-br from-soft-purple to-soft-lavender flex items-center justify-center text-white text-3xl font-bold font-display">
                 {nameDraft.charAt(0).toUpperCase() || "?"}
               </div>
             </div>
 
-            {/* Name input */}
             <div className="mb-4">
-              <label className="text-[11px] text-soft-text-secondary font-semibold uppercase tracking-wider block mb-1.5">
-                Display Name
-              </label>
-              <input
-                type="text"
-                value={nameDraft}
-                onChange={(e) => setNameDraft(e.target.value)}
-                maxLength={30}
-                placeholder="Your name"
-                className="w-full bg-soft-lavender-bg rounded-xl px-4 py-3 text-[14px] text-soft-purple-deeper font-medium border border-soft-lavender-border outline-none focus:ring-2 focus:ring-soft-purple/20 focus:border-soft-lavender"
-              />
+              <label className="text-[11px] text-soft-text-secondary font-semibold uppercase tracking-wider block mb-1.5">Display Name</label>
+              <input type="text" value={nameDraft} onChange={(e) => setNameDraft(e.target.value)} maxLength={30} placeholder="Your name" className="w-full bg-soft-lavender-bg rounded-xl px-4 py-3 text-[14px] text-soft-purple-deeper font-medium border border-soft-lavender-border outline-none focus:ring-2 focus:ring-soft-purple/20" />
             </div>
 
-            {/* Username input */}
             <div className="mb-6">
-              <label className="text-[11px] text-soft-text-secondary font-semibold uppercase tracking-wider block mb-1.5">
-                Username
-              </label>
-              <div className="flex items-center bg-soft-lavender-bg rounded-xl border border-soft-lavender-border focus-within:ring-2 focus-within:ring-soft-purple/20 focus-within:border-soft-lavender">
+              <label className="text-[11px] text-soft-text-secondary font-semibold uppercase tracking-wider block mb-1.5">Username</label>
+              <div className="flex items-center bg-soft-lavender-bg rounded-xl border border-soft-lavender-border focus-within:ring-2 focus-within:ring-soft-purple/20">
                 <span className="text-[14px] text-soft-muted pl-4 font-medium">@</span>
-                <input
-                  type="text"
-                  value={usernameDraft}
-                  onChange={(e) =>
-                    setUsernameDraft(
-                      e.target.value.toLowerCase().replace(/[^a-z0-9._]/g, "")
-                    )
-                  }
-                  maxLength={20}
-                  placeholder="username"
-                  className="flex-1 bg-transparent py-3 pr-4 pl-0.5 text-[14px] text-soft-purple-deeper font-medium outline-none"
-                />
+                <input type="text" value={usernameDraft} onChange={(e) => setUsernameDraft(e.target.value.toLowerCase().replace(/[^a-z0-9._]/g, ""))} maxLength={20} placeholder="username" className="flex-1 bg-transparent py-3 pr-4 pl-0.5 text-[14px] text-soft-purple-deeper font-medium outline-none" />
               </div>
-              <p className="text-[10px] text-soft-muted-light mt-1">
-                Letters, numbers, dots, and underscores only
-              </p>
+              <p className="text-[10px] text-soft-muted-light mt-1">Letters, numbers, dots, and underscores only</p>
             </div>
 
-            {/* Buttons */}
             <div className="flex gap-3">
-              <button
-                onClick={() => setEditingProfile(false)}
-                className="flex-1 py-3 rounded-xl border border-soft-lavender text-[13px] font-semibold text-soft-muted hover:bg-soft-lavender-bg transition-colors"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={saveProfile}
-                className="flex-1 py-3 rounded-xl bg-soft-purple text-white text-[13px] font-semibold hover:bg-soft-purple-dark transition-colors"
-              >
-                Save
-              </button>
+              <button onClick={() => setEditingProfile(false)} className="flex-1 py-3 rounded-xl border border-soft-lavender text-[13px] font-semibold text-soft-muted hover:bg-soft-lavender-bg transition-colors">Cancel</button>
+              <button onClick={saveProfile} className="flex-1 py-3 rounded-xl bg-soft-purple text-white text-[13px] font-semibold hover:bg-soft-purple-dark transition-colors">Save</button>
             </div>
           </div>
         </div>
