@@ -43,10 +43,10 @@ export default function ProfilePage() {
   const [editingProfile, setEditingProfile] = useState(false);
   const [customEmojiInput, setCustomEmojiInput] = useState("");
 
-  // Face detection state
   const [scanning, setScanning] = useState(false);
   const [scanResult, setScanResult] = useState<"none" | "pass" | "fail" | "warn">("none");
   const [scanMessage, setScanMessage] = useState("");
+  const [scanMethod, setScanMethod] = useState("");
 
   const [q1Draft, setQ1Draft] = useState("");
   const [q2Draft, setQ2Draft] = useState("");
@@ -87,49 +87,52 @@ export default function ProfilePage() {
   const handleAvatarPhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-
     const url = URL.createObjectURL(file);
 
-    // Start scanning
     setScanning(true);
     setScanResult("none");
-    setScanMessage("Scanning for faces...");
+    setScanMessage("Scanning photo for faces...");
+    setScanMethod("");
+    // Show preview while scanning
     setAvatarPhotoDraft(url);
 
     try {
       const result = await detectFaces(url);
+      setScanMethod(result.method);
 
       if (result.hasFaces) {
-        // REJECT — faces detected
+        // REJECT — face detected
         setScanResult("fail");
+        const methodLabel =
+          result.method === "native" ? "Browser AI" :
+          result.method === "face-api" ? "Face detection AI" :
+          "Image analysis";
         setScanMessage(
-          `Face detected! SoftSpace doesn\u2019t allow photos of people. Try a photo of your pet, a sunset, or something you love.`
+          `${methodLabel} detected a face in this photo. SoftSpace doesn\u2019t allow photos of people — try a pet, sunset, or something you love!`
         );
+        // Remove the preview
         setAvatarPhotoDraft("");
       } else if (result.error) {
-        // Model couldn't verify — warn but allow
+        // Couldn't fully verify — warn but allow
         setScanResult("warn");
         setScanMessage(result.error);
         setAvatarTypeDraft("photo");
       } else {
-        // PASS — no faces
+        // PASS — clean
         setScanResult("pass");
         setScanMessage("No faces detected — photo accepted!");
         setAvatarTypeDraft("photo");
-        setTimeout(() => {
-          if (setScanResult) setScanResult("none");
-        }, 3000);
+        setTimeout(() => setScanResult("none"), 4000);
       }
     } catch {
-      setScanResult("warn");
-      setScanMessage("Could not verify — please ensure no faces are in the photo");
-      setAvatarTypeDraft("photo");
+      // Detection completely failed — be strict, reject
+      setScanResult("fail");
+      setScanMessage("Face detection failed to run. Please try again or use an emoji/letter avatar instead.");
+      setAvatarPhotoDraft("");
     } finally {
       setScanning(false);
+      if (avatarPhotoRef.current) avatarPhotoRef.current.value = "";
     }
-
-    // Reset the input so same file can be re-selected
-    if (avatarPhotoRef.current) avatarPhotoRef.current.value = "";
   };
 
   const handleCustomEmoji = () => {
@@ -186,17 +189,9 @@ export default function ProfilePage() {
       return <div className={base}><img src={profile.avatarPhoto} alt="Avatar" className="w-full h-full object-cover" /></div>;
     }
     if (profile.avatarType === "text" && profile.avatarText) {
-      return (
-        <div className={base} style={{ background: `linear-gradient(135deg, ${profile.avatarColor}, ${profile.avatarColor}88)` }}>
-          <span className={`${fontSize} font-bold text-white font-display`}>{profile.avatarText}</span>
-        </div>
-      );
+      return <div className={base} style={{ background: `linear-gradient(135deg, ${profile.avatarColor}, ${profile.avatarColor}88)` }}><span className={`${fontSize} font-bold text-white font-display`}>{profile.avatarText}</span></div>;
     }
-    return (
-      <div className={base} style={{ background: `linear-gradient(135deg, ${profile.avatarColor}, ${profile.avatarColor}88)` }}>
-        <span className={fontSize}>{profile.avatarEmoji}</span>
-      </div>
-    );
+    return <div className={base} style={{ background: `linear-gradient(135deg, ${profile.avatarColor}, ${profile.avatarColor}88)` }}><span className={fontSize}>{profile.avatarEmoji}</span></div>;
   };
 
   const AvatarPreview = ({ size, fontSize }: { size: string; fontSize: string }) => {
@@ -205,17 +200,9 @@ export default function ProfilePage() {
       return <div className={base}><img src={avatarPhotoDraft} alt="Avatar" className="w-full h-full object-cover" /></div>;
     }
     if (avatarTypeDraft === "text" && avatarTextDraft) {
-      return (
-        <div className={base} style={{ background: `linear-gradient(135deg, ${colorDraft}, ${colorDraft}88)` }}>
-          <span className={`${fontSize} font-bold text-white font-display`}>{avatarTextDraft}</span>
-        </div>
-      );
+      return <div className={base} style={{ background: `linear-gradient(135deg, ${colorDraft}, ${colorDraft}88)` }}><span className={`${fontSize} font-bold text-white font-display`}>{avatarTextDraft}</span></div>;
     }
-    return (
-      <div className={base} style={{ background: `linear-gradient(135deg, ${colorDraft}, ${colorDraft}88)` }}>
-        <span className={fontSize}>{emojiDraft}</span>
-      </div>
-    );
+    return <div className={base} style={{ background: `linear-gradient(135deg, ${colorDraft}, ${colorDraft}88)` }}><span className={fontSize}>{emojiDraft}</span></div>;
   };
 
   const MediaPreview = ({ media, small }: { media: { url: string; type: "image" | "video" } | null; small?: boolean }) => {
@@ -255,11 +242,7 @@ export default function ProfilePage() {
       <div className="bg-white rounded-softer border border-soft-lavender-border p-5 mb-3">
         <div className="flex items-center gap-3 mb-4">
           <div className="w-9 h-9 rounded-lg flex items-center justify-center text-lg overflow-hidden" style={{ background: `linear-gradient(135deg, ${profile.avatarColor}33, ${profile.avatarColor}18)` }}>
-            {profile.avatarType === "photo" && profile.avatarPhoto ? (
-              <img src={profile.avatarPhoto} alt="" className="w-full h-full object-cover" />
-            ) : profile.avatarType === "text" && profile.avatarText ? (
-              <span className="text-xs font-bold" style={{ color: profile.avatarColor }}>{profile.avatarText}</span>
-            ) : profile.avatarEmoji}
+            {profile.avatarType === "photo" && profile.avatarPhoto ? <img src={profile.avatarPhoto} alt="" className="w-full h-full object-cover" /> : profile.avatarType === "text" && profile.avatarText ? <span className="text-xs font-bold" style={{ color: profile.avatarColor }}>{profile.avatarText}</span> : profile.avatarEmoji}
           </div>
           <p className="text-[11px] text-soft-text-secondary font-semibold uppercase tracking-wider">Get to know me</p>
         </div>
@@ -271,12 +254,7 @@ export default function ProfilePage() {
             {editing === "q1" ? (
               <div>
                 <textarea value={q1Draft} onChange={(e) => handleQ1Change(e.target.value)} autoFocus placeholder="Type your answer..." className="w-full bg-soft-lavender-bg rounded-xl px-3.5 py-3 text-[13px] text-soft-purple-deeper leading-relaxed font-medium border-l-[3px] border-soft-lavender outline-none resize-none min-h-[80px] focus:ring-2 focus:ring-soft-purple/20" />
-                {q1MediaDraft && (
-                  <div className="relative">
-                    <MediaPreview media={q1MediaDraft} />
-                    <button onClick={() => setQ1MediaDraft(null)} className="absolute top-4 right-2 bg-black/50 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs">✕</button>
-                  </div>
-                )}
+                {q1MediaDraft && (<div className="relative"><MediaPreview media={q1MediaDraft} /><button onClick={() => setQ1MediaDraft(null)} className="absolute top-4 right-2 bg-black/50 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs">✕</button></div>)}
                 <div className="flex items-center justify-between mt-1.5">
                   <div className="flex items-center gap-2">
                     <p className="text-[10px] text-soft-muted-light">{wordCount(q1Draft)} / 200 words</p>
@@ -305,12 +283,7 @@ export default function ProfilePage() {
             {editing === "q2" ? (
               <div>
                 <textarea value={q2Draft} onChange={(e) => handleQ2Change(e.target.value)} autoFocus placeholder="Type your answer..." className="w-full bg-soft-lavender-bg rounded-xl px-3.5 py-3 text-[13px] text-soft-purple-deeper leading-relaxed font-medium border-l-[3px] border-soft-lavender outline-none resize-none min-h-[80px] focus:ring-2 focus:ring-soft-purple/20" />
-                {q2MediaDraft && (
-                  <div className="relative">
-                    <MediaPreview media={q2MediaDraft} />
-                    <button onClick={() => setQ2MediaDraft(null)} className="absolute top-4 right-2 bg-black/50 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs">✕</button>
-                  </div>
-                )}
+                {q2MediaDraft && (<div className="relative"><MediaPreview media={q2MediaDraft} /><button onClick={() => setQ2MediaDraft(null)} className="absolute top-4 right-2 bg-black/50 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs">✕</button></div>)}
                 <div className="flex items-center justify-between mt-1.5">
                   <div className="flex items-center gap-2">
                     <p className="text-[10px] text-soft-muted-light">{wordCount(q2Draft)} / 200 words</p>
@@ -354,15 +327,9 @@ export default function ProfilePage() {
             ) : (
               <div onClick={() => startEditing("q3")} className="cursor-pointer">
                 {profile.qualities.some((q) => q) ? (
-                  <div className="flex flex-wrap gap-2">
-                    {profile.qualities.filter((q) => q).map((q, i) => (
-                      <span key={i} className="bg-soft-lavender-bg rounded-full px-3.5 py-1.5 text-xs font-semibold text-soft-purple border border-soft-lavender">{q}</span>
-                    ))}
-                  </div>
+                  <div className="flex flex-wrap gap-2">{profile.qualities.filter((q) => q).map((q, i) => (<span key={i} className="bg-soft-lavender-bg rounded-full px-3.5 py-1.5 text-xs font-semibold text-soft-purple border border-soft-lavender">{q}</span>))}</div>
                 ) : (
-                  <div className="bg-soft-lavender-bg rounded-xl px-3.5 py-3 text-[13px] leading-relaxed font-medium border-l-[3px] border-soft-lavender hover:bg-soft-lavender-light transition-colors min-h-[44px]">
-                    <span className="text-soft-muted-light italic">Tap to add qualities...</span>
-                  </div>
+                  <div className="bg-soft-lavender-bg rounded-xl px-3.5 py-3 text-[13px] leading-relaxed font-medium border-l-[3px] border-soft-lavender hover:bg-soft-lavender-light transition-colors min-h-[44px]"><span className="text-soft-muted-light italic">Tap to add qualities...</span></div>
                 )}
               </div>
             )}
@@ -372,13 +339,7 @@ export default function ProfilePage() {
 
       {/* Settings */}
       <div className="bg-white rounded-softer border border-soft-lavender-border overflow-hidden">
-        {[
-          { label: "Edit Folder", icon: "📁" },
-          { label: "Notification Preferences", icon: "🔔" },
-          { label: "Privacy & Safety", icon: "🔒" },
-          { label: "SoftSpace+ Subscription", icon: "⭐" },
-          { label: "Help & Feedback", icon: "💬" },
-        ].map((item, i) => (
+        {[{ label: "Edit Folder", icon: "📁" }, { label: "Notification Preferences", icon: "🔔" }, { label: "Privacy & Safety", icon: "🔒" }, { label: "SoftSpace+ Subscription", icon: "⭐" }, { label: "Help & Feedback", icon: "💬" }].map((item, i) => (
           <div key={item.label} className={`flex items-center gap-3 px-4 py-3.5 cursor-pointer hover:bg-soft-lavender-bg transition-colors ${i < 4 ? "border-b border-soft-lavender-border" : ""}`}>
             <span className="text-lg">{item.icon}</span>
             <span className="text-sm font-semibold text-soft-purple-deeper flex-1">{item.label}</span>
@@ -394,25 +355,15 @@ export default function ProfilePage() {
           <div onClick={(e) => e.stopPropagation()} className="bg-white w-full max-w-[380px] px-5 pt-6 pb-7 max-h-[85vh] overflow-y-auto" style={{ borderRadius: "24px" }}>
             <h2 className="font-display font-bold text-lg text-soft-purple-deeper mb-5">Edit Profile</h2>
 
-            {/* Avatar preview */}
             <div className="flex justify-center mb-4">
               <AvatarPreview size="w-20 h-20" fontSize="text-4xl" />
             </div>
 
-            {/* Avatar type tabs */}
+            {/* Tabs */}
             <div className="flex gap-1.5 mb-4 bg-soft-lavender-bg rounded-xl p-1">
-              {[
-                { key: "emoji" as const, label: "Emoji" },
-                { key: "text" as const, label: "Letters" },
-                { key: "photo" as const, label: "Photo" },
-              ].map((tab) => (
-                <button
-                  key={tab.key}
-                  onClick={() => setAvatarTypeDraft(tab.key)}
-                  className={`flex-1 py-2 rounded-lg text-[12px] font-semibold transition-all ${
-                    avatarTypeDraft === tab.key ? "bg-white text-soft-purple shadow-sm" : "text-soft-muted hover:text-soft-purple-deep"
-                  }`}
-                >
+              {[{ key: "emoji" as const, label: "Emoji" }, { key: "text" as const, label: "Letters" }, { key: "photo" as const, label: "Photo" }].map((tab) => (
+                <button key={tab.key} onClick={() => setAvatarTypeDraft(tab.key)}
+                  className={`flex-1 py-2 rounded-lg text-[12px] font-semibold transition-all ${avatarTypeDraft === tab.key ? "bg-white text-soft-purple shadow-sm" : "text-soft-muted hover:text-soft-purple-deep"}`}>
                   {tab.label}
                 </button>
               ))}
@@ -426,9 +377,7 @@ export default function ProfilePage() {
                     <div className="grid grid-rows-3 grid-flow-col gap-1.5 w-max">
                       {POPULAR_EMOJIS.map((emoji) => (
                         <button key={emoji} onClick={() => { setEmojiDraft(emoji); setAvatarTypeDraft("emoji"); }}
-                          className={`w-10 h-10 rounded-lg text-xl flex items-center justify-center transition-all flex-shrink-0 ${
-                            emojiDraft === emoji && avatarTypeDraft === "emoji" ? "bg-soft-purple scale-110 shadow-md" : "bg-soft-lavender-bg hover:bg-soft-lavender-light"
-                          }`}>{emoji}</button>
+                          className={`w-10 h-10 rounded-lg text-xl flex items-center justify-center transition-all flex-shrink-0 ${emojiDraft === emoji && avatarTypeDraft === "emoji" ? "bg-soft-purple scale-110 shadow-md" : "bg-soft-lavender-bg hover:bg-soft-lavender-light"}`}>{emoji}</button>
                       ))}
                     </div>
                   </div>
@@ -448,12 +397,7 @@ export default function ProfilePage() {
             {avatarTypeDraft === "text" && (
               <div className="mb-4">
                 <label className="text-[11px] text-soft-text-secondary font-semibold uppercase tracking-wider block mb-1.5">Type up to 3 characters</label>
-                <input
-                  type="text" value={avatarTextDraft}
-                  onChange={(e) => { if (e.target.value.length <= 3) setAvatarTextDraft(e.target.value.toUpperCase()); }}
-                  placeholder="e.g. RAY" maxLength={3}
-                  className="w-full bg-soft-lavender-bg rounded-xl px-4 py-3 text-[20px] text-soft-purple-deeper font-bold text-center border border-soft-lavender-border outline-none focus:ring-2 focus:ring-soft-purple/20 font-display tracking-wider"
-                />
+                <input type="text" value={avatarTextDraft} onChange={(e) => { if (e.target.value.length <= 3) setAvatarTextDraft(e.target.value.toUpperCase()); }} placeholder="e.g. RAY" maxLength={3} className="w-full bg-soft-lavender-bg rounded-xl px-4 py-3 text-[20px] text-soft-purple-deeper font-bold text-center border border-soft-lavender-border outline-none focus:ring-2 focus:ring-soft-purple/20 font-display tracking-wider" />
                 <p className="text-[10px] text-soft-muted-light mt-1 text-center">{avatarTextDraft.length}/3 characters</p>
               </div>
             )}
@@ -461,65 +405,59 @@ export default function ProfilePage() {
             {/* ── Photo mode ── */}
             {avatarTypeDraft === "photo" && (
               <div className="mb-4">
-                <button
-                  onClick={() => avatarPhotoRef.current?.click()}
-                  disabled={scanning}
-                  className={`w-full py-3 rounded-xl border-2 border-dashed text-[13px] font-semibold transition-colors cursor-pointer flex items-center justify-center gap-2 ${
-                    scanning
-                      ? "border-soft-lavender bg-soft-lavender-bg text-soft-muted cursor-wait"
-                      : "border-soft-lavender text-soft-purple bg-soft-lavender-bg hover:bg-soft-lavender-light"
-                  }`}
-                >
+                <button onClick={() => avatarPhotoRef.current?.click()} disabled={scanning}
+                  className={`w-full py-3 rounded-xl border-2 border-dashed text-[13px] font-semibold transition-colors cursor-pointer flex items-center justify-center gap-2 ${scanning ? "border-amber-300 bg-amber-50 text-amber-700 cursor-wait" : "border-soft-lavender text-soft-purple bg-soft-lavender-bg hover:bg-soft-lavender-light"}`}>
                   {scanning ? (
-                    <>
-                      <span className="animate-spin">🔍</span> Scanning for faces...
-                    </>
-                  ) : (
-                    <>📷 Upload a photo</>
-                  )}
+                    <><span className="inline-block animate-spin text-base">🔍</span> Scanning for faces...</>
+                  ) : (<>📷 Upload a photo</>)}
                 </button>
                 <input ref={avatarPhotoRef} type="file" accept="image/*" className="hidden" onChange={handleAvatarPhotoUpload} />
 
-                {/* Policy notice */}
-                <div className="mt-2.5 bg-amber-50 border border-amber-200 rounded-xl px-3.5 py-2.5">
-                  <p className="text-[11px] text-amber-800 font-semibold flex items-center gap-1.5">
-                    🛡️ AI-powered face detection
-                  </p>
-                  <p className="text-[10px] text-amber-700 mt-0.5 leading-relaxed">
-                    Photos are automatically scanned for faces. SoftSpace is about connecting without appearances — try a pet, sunset, or something meaningful to you.
-                  </p>
+                {/* Always-visible policy */}
+                <div className="mt-2.5 bg-soft-lavender-bg border border-soft-lavender-border rounded-xl px-3.5 py-2.5">
+                  <p className="text-[11px] text-soft-purple-deep font-semibold flex items-center gap-1.5">🛡️ AI-powered face detection</p>
+                  <p className="text-[10px] text-soft-muted mt-0.5 leading-relaxed">Photos are automatically scanned. No photos of people allowed — try a pet, sunset, or something meaningful to you.</p>
                 </div>
 
-                {/* Scan result messages */}
+                {/* Scan results */}
                 {scanResult === "fail" && (
-                  <div className="mt-2 bg-red-50 border border-red-200 rounded-xl px-3.5 py-2.5">
-                    <p className="text-[11px] text-red-700 font-semibold flex items-center gap-1.5">
-                      🚫 {scanMessage}
-                    </p>
+                  <div className="mt-2 bg-red-50 border border-red-300 rounded-xl px-3.5 py-3">
+                    <p className="text-[12px] text-red-700 font-bold flex items-center gap-1.5">🚫 Photo rejected</p>
+                    <p className="text-[11px] text-red-600 mt-1 leading-relaxed">{scanMessage}</p>
                   </div>
                 )}
 
                 {scanResult === "pass" && (
-                  <div className="mt-2 bg-green-50 border border-green-200 rounded-xl px-3.5 py-2.5">
-                    <p className="text-[11px] text-green-700 font-semibold flex items-center gap-1.5">
-                      ✅ {scanMessage}
-                    </p>
+                  <div className="mt-2 bg-green-50 border border-green-300 rounded-xl px-3.5 py-3">
+                    <p className="text-[12px] text-green-700 font-bold flex items-center gap-1.5">✅ {scanMessage}</p>
+                    {scanMethod && <p className="text-[10px] text-green-600 mt-0.5">Verified by: {scanMethod === "native" ? "Browser AI" : scanMethod === "face-api" ? "Face detection model" : "Image analysis"}</p>}
                   </div>
                 )}
 
                 {scanResult === "warn" && (
-                  <div className="mt-2 bg-amber-50 border border-amber-200 rounded-xl px-3.5 py-2.5">
-                    <p className="text-[11px] text-amber-700 font-semibold flex items-center gap-1.5">
-                      ⚠️ {scanMessage}
-                    </p>
+                  <div className="mt-2 bg-amber-50 border border-amber-300 rounded-xl px-3.5 py-3">
+                    <p className="text-[12px] text-amber-700 font-bold flex items-center gap-1.5">⚠️ Partial verification</p>
+                    <p className="text-[11px] text-amber-600 mt-1 leading-relaxed">{scanMessage}</p>
                   </div>
                 )}
 
                 {/* Photo preview */}
-                {avatarPhotoDraft && (
+                {avatarPhotoDraft && !scanning && (
                   <div className="mt-2.5 relative">
                     <img src={avatarPhotoDraft} alt="Preview" className="w-full h-32 rounded-xl object-cover" />
-                    <button onClick={() => { setAvatarPhotoDraft(""); setScanResult("none"); }} className="absolute top-2 right-2 bg-black/50 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs">✕</button>
+                    <button onClick={() => { setAvatarPhotoDraft(""); setScanResult("none"); }} className="absolute top-2 right-2 bg-black/50 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-black/70">✕</button>
+                  </div>
+                )}
+
+                {/* Scanning preview (dimmed) */}
+                {avatarPhotoDraft && scanning && (
+                  <div className="mt-2.5 relative">
+                    <img src={avatarPhotoDraft} alt="Scanning" className="w-full h-32 rounded-xl object-cover opacity-50" />
+                    <div className="absolute inset-0 mt-2 flex items-center justify-center">
+                      <div className="bg-white/90 rounded-lg px-4 py-2 text-[12px] font-semibold text-amber-700 flex items-center gap-2">
+                        <span className="inline-block animate-spin">🔍</span> Analyzing...
+                      </div>
+                    </div>
                   </div>
                 )}
               </div>
@@ -527,55 +465,19 @@ export default function ProfilePage() {
 
             {/* Color picker — 2 rows */}
             <div className="mb-4">
-              <label className="text-[11px] text-soft-text-secondary font-semibold uppercase tracking-wider block mb-1.5">
-                {avatarTypeDraft === "photo" ? "Profile accent color" : "Avatar color"}
-              </label>
+              <label className="text-[11px] text-soft-text-secondary font-semibold uppercase tracking-wider block mb-1.5">{avatarTypeDraft === "photo" ? "Profile accent color" : "Avatar color"}</label>
               <div className="flex flex-wrap gap-2 mb-2.5">
                 {PRESET_COLORS.map((color) => (
-                  <button key={color} onClick={() => setColorDraft(color)}
-                    className={`w-9 h-9 rounded-lg transition-all ${colorDraft === color ? "scale-110 shadow-md ring-2 ring-soft-purple ring-offset-2" : "hover:scale-105"}`}
-                    style={{ backgroundColor: color }} />
+                  <button key={color} onClick={() => setColorDraft(color)} className={`w-9 h-9 rounded-lg transition-all ${colorDraft === color ? "scale-110 shadow-md ring-2 ring-soft-purple ring-offset-2" : "hover:scale-105"}`} style={{ backgroundColor: color }} />
                 ))}
-                <button onClick={() => colorPickerRef.current?.click()}
-                  className="w-9 h-9 rounded-lg transition-all hover:scale-105 flex items-center justify-center"
-                  style={{ background: "conic-gradient(from 0deg, #ff0000, #ffff00, #00ff00, #00ffff, #0000ff, #ff00ff, #ff0000)" }}>
+                <button onClick={() => colorPickerRef.current?.click()} className="w-9 h-9 rounded-lg transition-all hover:scale-105 flex items-center justify-center" style={{ background: "conic-gradient(from 0deg, #ff0000, #ffff00, #00ff00, #00ffff, #0000ff, #ff00ff, #ff0000)" }}>
                   <span className="bg-white rounded-md px-0.5 text-[8px] font-bold text-soft-purple">+</span>
                 </button>
                 <input ref={colorPickerRef} type="color" value={colorDraft} onChange={(e) => setColorDraft(e.target.value)} className="hidden" />
               </div>
               <input type="range" min="0" max="360"
-                value={(() => {
-                  const hex = colorDraft.replace("#", "");
-                  const r = parseInt(hex.substring(0, 2), 16) / 255;
-                  const g = parseInt(hex.substring(2, 4), 16) / 255;
-                  const b = parseInt(hex.substring(4, 6), 16) / 255;
-                  const max = Math.max(r, g, b), min = Math.min(r, g, b);
-                  let h = 0;
-                  if (max !== min) {
-                    const d = max - min;
-                    if (max === r) h = ((g - b) / d + (g < b ? 6 : 0)) * 60;
-                    else if (max === g) h = ((b - r) / d + 2) * 60;
-                    else h = ((r - g) / d + 4) * 60;
-                  }
-                  return Math.round(h);
-                })()}
-                onChange={(e) => {
-                  const h = parseInt(e.target.value);
-                  const s = 0.45, l = 0.60;
-                  const hueToRgb = (p: number, q: number, t: number) => {
-                    if (t < 0) t += 1; if (t > 1) t -= 1;
-                    if (t < 1/6) return p + (q-p)*6*t;
-                    if (t < 1/2) return q;
-                    if (t < 2/3) return p + (q-p)*(2/3-t)*6;
-                    return p;
-                  };
-                  const q = l < 0.5 ? l*(1+s) : l+s-l*s;
-                  const p = 2*l-q;
-                  const r = Math.round(hueToRgb(p,q,h/360+1/3)*255);
-                  const g = Math.round(hueToRgb(p,q,h/360)*255);
-                  const b = Math.round(hueToRgb(p,q,h/360-1/3)*255);
-                  setColorDraft(`#${r.toString(16).padStart(2,"0")}${g.toString(16).padStart(2,"0")}${b.toString(16).padStart(2,"0")}`);
-                }}
+                value={(() => { const hex = colorDraft.replace("#", ""); const r = parseInt(hex.substring(0, 2), 16) / 255; const g = parseInt(hex.substring(2, 4), 16) / 255; const b = parseInt(hex.substring(4, 6), 16) / 255; const max = Math.max(r, g, b), min = Math.min(r, g, b); let h = 0; if (max !== min) { const d = max - min; if (max === r) h = ((g - b) / d + (g < b ? 6 : 0)) * 60; else if (max === g) h = ((b - r) / d + 2) * 60; else h = ((r - g) / d + 4) * 60; } return Math.round(h); })()}
+                onChange={(e) => { const h = parseInt(e.target.value); const s = 0.45, l = 0.60; const hueToRgb = (p: number, q: number, t: number) => { if (t < 0) t += 1; if (t > 1) t -= 1; if (t < 1/6) return p + (q-p)*6*t; if (t < 1/2) return q; if (t < 2/3) return p + (q-p)*(2/3-t)*6; return p; }; const q = l < 0.5 ? l*(1+s) : l+s-l*s; const p = 2*l-q; const r = Math.round(hueToRgb(p,q,h/360+1/3)*255); const g = Math.round(hueToRgb(p,q,h/360)*255); const b = Math.round(hueToRgb(p,q,h/360-1/3)*255); setColorDraft(`#${r.toString(16).padStart(2,"0")}${g.toString(16).padStart(2,"0")}${b.toString(16).padStart(2,"0")}`); }}
                 className="w-full h-8 rounded-lg appearance-none cursor-pointer"
                 style={{ background: "linear-gradient(to right, hsl(0,45%,60%), hsl(30,45%,60%), hsl(60,45%,60%), hsl(90,45%,60%), hsl(120,45%,60%), hsl(150,45%,60%), hsl(180,45%,60%), hsl(210,45%,60%), hsl(240,45%,60%), hsl(270,45%,60%), hsl(300,45%,60%), hsl(330,45%,60%), hsl(360,45%,60%))" }}
               />
