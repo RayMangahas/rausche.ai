@@ -8,12 +8,17 @@
 
 // ─── Native FaceDetector (Chrome/Edge) ───
 
-async function detectWithNativeAPI(img: HTMLImageElement): Promise<{ hasFaces: boolean; faceCount: number } | null> {
+async function detectWithNativeAPI(
+  img: HTMLImageElement,
+): Promise<{ hasFaces: boolean; faceCount: number } | null> {
   try {
     // Check if native FaceDetector is available
     if (!("FaceDetector" in window)) return null;
 
-    const detector = new (window as any).FaceDetector({ fastMode: true, maxDetectedFaces: 5 });
+    const detector = new (window as any).FaceDetector({
+      fastMode: true,
+      maxDetectedFaces: 5,
+    });
     const faces = await detector.detect(img);
     return { hasFaces: faces.length > 0, faceCount: faces.length };
   } catch {
@@ -45,13 +50,15 @@ async function initFaceApi(): Promise<boolean> {
   if (faceApiState === "failed") return false;
   if (faceApiState === "loading" && faceApiPromise) {
     await faceApiPromise;
-    return faceApiState === "ready";
+    return (faceApiState as string) === "ready";
   }
 
   faceApiState = "loading";
   faceApiPromise = (async () => {
     try {
-      await loadScript("https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js");
+      await loadScript(
+        "https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js",
+      );
 
       const faceapi = (window as any).faceapi;
       if (!faceapi) throw new Error("face-api.js not on window");
@@ -86,7 +93,9 @@ async function initFaceApi(): Promise<boolean> {
   return faceApiState === "ready";
 }
 
-async function detectWithFaceApi(img: HTMLImageElement): Promise<{ hasFaces: boolean; faceCount: number } | null> {
+async function detectWithFaceApi(
+  img: HTMLImageElement,
+): Promise<{ hasFaces: boolean; faceCount: number } | null> {
   const ready = await initFaceApi();
   if (!ready) return null;
 
@@ -94,7 +103,10 @@ async function detectWithFaceApi(img: HTMLImageElement): Promise<{ hasFaces: boo
     const faceapi = (window as any).faceapi;
     const detections = await faceapi.detectAllFaces(
       img,
-      new faceapi.TinyFaceDetectorOptions({ inputSize: 416, scoreThreshold: 0.25 })
+      new faceapi.TinyFaceDetectorOptions({
+        inputSize: 416,
+        scoreThreshold: 0.25,
+      }),
     );
     return { hasFaces: detections.length > 0, faceCount: detections.length };
   } catch {
@@ -104,7 +116,11 @@ async function detectWithFaceApi(img: HTMLImageElement): Promise<{ hasFaces: boo
 
 // ─── Simple skin-tone heuristic as last resort ───
 
-function detectWithHeuristic(img: HTMLImageElement): { hasFaces: boolean; faceCount: number; confidence: "low" } {
+function detectWithHeuristic(img: HTMLImageElement): {
+  hasFaces: boolean;
+  faceCount: number;
+  confidence: "low";
+} {
   try {
     const canvas = document.createElement("canvas");
     const size = 100; // Downsample for speed
@@ -120,14 +136,21 @@ function detectWithHeuristic(img: HTMLImageElement): { hasFaces: boolean; faceCo
     const totalPixels = size * size;
 
     for (let i = 0; i < data.length; i += 4) {
-      const r = data[i], g = data[i + 1], b = data[i + 2];
+      const r = data[i],
+        g = data[i + 1],
+        b = data[i + 2];
       // Broad skin tone detection across different skin colors
       if (
-        r > 60 && g > 40 && b > 20 &&
-        r > g && r > b &&
-        (r - g) > 10 &&
+        r > 60 &&
+        g > 40 &&
+        b > 20 &&
+        r > g &&
+        r > b &&
+        r - g > 10 &&
         Math.abs(r - g) < 100 &&
-        r < 250 && g < 230 && b < 210
+        r < 250 &&
+        g < 230 &&
+        b < 210
       ) {
         skinPixels++;
       }
@@ -135,7 +158,11 @@ function detectWithHeuristic(img: HTMLImageElement): { hasFaces: boolean; faceCo
 
     const skinRatio = skinPixels / totalPixels;
     // If more than 30% of image is skin-toned, likely contains a person
-    return { hasFaces: skinRatio > 0.30, faceCount: skinRatio > 0.30 ? 1 : 0, confidence: "low" };
+    return {
+      hasFaces: skinRatio > 0.3,
+      faceCount: skinRatio > 0.3 ? 1 : 0,
+      confidence: "low",
+    };
   } catch {
     return { hasFaces: false, faceCount: 0, confidence: "low" };
   }
@@ -160,7 +187,12 @@ export async function detectFaces(imageUrl: string): Promise<{
       img.src = imageUrl;
     });
   } catch {
-    return { hasFaces: true, faceCount: 0, method: "error", error: "Could not load image for scanning" };
+    return {
+      hasFaces: true,
+      faceCount: 0,
+      method: "error",
+      error: "Could not load image for scanning",
+    };
   }
 
   // Method 1: Native FaceDetector API (Chrome/Edge)
@@ -192,6 +224,7 @@ export async function detectFaces(imageUrl: string): Promise<{
     hasFaces: false,
     faceCount: 0,
     method: "heuristic",
-    error: "AI face detection couldn't load — photo accepted, but please ensure no faces",
+    error:
+      "AI face detection couldn't load — photo accepted, but please ensure no faces",
   };
 }
