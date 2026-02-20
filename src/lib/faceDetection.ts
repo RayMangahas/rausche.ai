@@ -44,12 +44,16 @@ function loadScript(src: string): Promise<void> {
   });
 }
 
+function checkReady(): boolean {
+  return faceApiState === "ready";
+}
+
 async function initFaceApi(): Promise<boolean> {
   if (faceApiState === "ready") return true;
   if (faceApiState === "failed") return false;
   if (faceApiState === "loading" && faceApiPromise) {
     await faceApiPromise;
-    return faceApiState === "ready";
+    return checkReady();
   }
 
   faceApiState = "loading";
