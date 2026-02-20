@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useProfile } from "@/lib/ProfileContext";
 
 function wordCount(text: string) {
@@ -8,9 +8,13 @@ function wordCount(text: string) {
 }
 
 const AVATAR_EMOJIS = [
-  "😊", "😎", "🤓", "🥰", "😴", "🤔", "🌙", "🌸",
-  "🔥", "⭐", "🎵", "🎮", "📚", "🎨", "🐱", "🐶",
-  "🦋", "🌊", "☕", "🍕", "🏀", "🎧", "💜", "✨",
+  // Row-style groups — 3 rows visible, scroll horizontally
+  "😊", "😎", "🤓", "🥰", "😴", "🤔", "😇", "🤗", "😏", "🥳",
+  "🤩", "😌", "🫠", "🙃", "😤", "🫡", "🤭", "😶‍🌫️", "🥶", "🤯",
+  "🌙", "🌸", "🔥", "⭐", "🎵", "🎮", "📚", "🎨", "🐱", "🐶",
+  "🦋", "🌊", "☕", "🍕", "🏀", "🎧", "💜", "✨", "🌈", "🍀",
+  "🧠", "💡", "🎯", "🏔️", "🌻", "🍂", "🎭", "🪐", "🦊", "🐻",
+  "🐼", "🦄", "🌮", "🍣", "🎸", "🎹", "🏄", "🧘", "🚀", "💎",
 ];
 
 const AVATAR_COLORS = [
@@ -22,18 +26,25 @@ const AVATAR_COLORS = [
 export default function ProfilePage() {
   const { profile, setProfile } = useProfile();
 
-  // Edit profile modal
   const [nameDraft, setNameDraft] = useState(profile.name);
   const [usernameDraft, setUsernameDraft] = useState(profile.username);
   const [emojiDraft, setEmojiDraft] = useState(profile.avatarEmoji);
   const [colorDraft, setColorDraft] = useState(profile.avatarColor);
   const [editingProfile, setEditingProfile] = useState(false);
 
-  // Question editing
   const [q1Draft, setQ1Draft] = useState("");
   const [q2Draft, setQ2Draft] = useState("");
   const [qualitiesDraft, setQualitiesDraft] = useState(["", "", ""]);
   const [editing, setEditing] = useState<string | null>(null);
+
+  // Media state for each question
+  const [q1Media, setQ1Media] = useState<{ url: string; type: "image" | "video" } | null>(null);
+  const [q2Media, setQ2Media] = useState<{ url: string; type: "image" | "video" } | null>(null);
+  const [q1MediaDraft, setQ1MediaDraft] = useState<{ url: string; type: "image" | "video" } | null>(null);
+  const [q2MediaDraft, setQ2MediaDraft] = useState<{ url: string; type: "image" | "video" } | null>(null);
+
+  const q1FileRef = useRef<HTMLInputElement>(null);
+  const q2FileRef = useRef<HTMLInputElement>(null);
 
   const handleQ1Change = (val: string) => {
     if (wordCount(val) <= 200) setQ1Draft(val);
@@ -49,16 +60,39 @@ export default function ProfilePage() {
     }
   };
 
+  const handleFileSelect = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    setDraft: (m: { url: string; type: "image" | "video" } | null) => void
+  ) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const url = URL.createObjectURL(file);
+    const type = file.type.startsWith("video") ? "video" : "image";
+    setDraft({ url, type });
+  };
+
   const startEditing = (field: string) => {
-    if (field === "q1") setQ1Draft(profile.q1);
-    if (field === "q2") setQ2Draft(profile.q2);
+    if (field === "q1") {
+      setQ1Draft(profile.q1);
+      setQ1MediaDraft(q1Media);
+    }
+    if (field === "q2") {
+      setQ2Draft(profile.q2);
+      setQ2MediaDraft(q2Media);
+    }
     if (field === "q3") setQualitiesDraft([...profile.qualities]);
     setEditing(field);
   };
 
   const handleSave = () => {
-    if (editing === "q1") setProfile({ q1: q1Draft });
-    if (editing === "q2") setProfile({ q2: q2Draft });
+    if (editing === "q1") {
+      setProfile({ q1: q1Draft });
+      setQ1Media(q1MediaDraft);
+    }
+    if (editing === "q2") {
+      setProfile({ q2: q2Draft });
+      setQ2Media(q2MediaDraft);
+    }
     if (editing === "q3") setProfile({ qualities: [...qualitiesDraft] });
     setEditing(null);
   };
@@ -81,6 +115,15 @@ export default function ProfilePage() {
       avatarColor: colorDraft,
     });
     setEditingProfile(false);
+  };
+
+  const MediaPreview = ({ media, small }: { media: { url: string; type: "image" | "video" } | null; small?: boolean }) => {
+    if (!media) return null;
+    const cls = small ? "w-full h-32 rounded-xl mt-2" : "w-full h-40 rounded-xl mt-2";
+    if (media.type === "video") {
+      return <video src={media.url} className={`${cls} object-cover bg-black`} controls />;
+    }
+    return <img src={media.url} alt="Uploaded" className={`${cls} object-cover`} />;
   };
 
   return (
@@ -140,8 +183,31 @@ export default function ProfilePage() {
             {editing === "q1" ? (
               <div>
                 <textarea value={q1Draft} onChange={(e) => handleQ1Change(e.target.value)} autoFocus placeholder="Type your answer..." className="w-full bg-soft-lavender-bg rounded-xl px-3.5 py-3 text-[13px] text-soft-purple-deeper leading-relaxed font-medium border-l-[3px] border-soft-lavender outline-none resize-none min-h-[80px] focus:ring-2 focus:ring-soft-purple/20" />
+
+                {/* Media preview */}
+                {q1MediaDraft && (
+                  <div className="relative">
+                    <MediaPreview media={q1MediaDraft} />
+                    <button
+                      onClick={() => setQ1MediaDraft(null)}
+                      className="absolute top-4 right-2 bg-black/50 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs"
+                    >
+                      ✕
+                    </button>
+                  </div>
+                )}
+
                 <div className="flex items-center justify-between mt-1.5">
-                  <p className="text-[10px] text-soft-muted-light">{wordCount(q1Draft)} / 200 words</p>
+                  <div className="flex items-center gap-2">
+                    <p className="text-[10px] text-soft-muted-light">{wordCount(q1Draft)} / 200 words</p>
+                    <button
+                      onClick={() => q1FileRef.current?.click()}
+                      className="text-[11px] text-soft-purple font-semibold flex items-center gap-1 hover:text-soft-purple-dark transition-colors"
+                    >
+                      📷 Add photo/video
+                    </button>
+                    <input ref={q1FileRef} type="file" accept="image/*,video/*" className="hidden" onChange={(e) => handleFileSelect(e, setQ1MediaDraft)} />
+                  </div>
                   <div className="flex gap-2">
                     <button onClick={handleCancel} className="text-[12px] text-soft-muted font-semibold px-3 py-1 rounded-lg hover:bg-soft-lavender-bg transition-colors">Cancel</button>
                     <button onClick={handleSave} className="text-[12px] text-white font-semibold px-4 py-1 rounded-lg bg-soft-purple hover:bg-soft-purple-dark transition-colors">Save</button>
@@ -149,8 +215,11 @@ export default function ProfilePage() {
                 </div>
               </div>
             ) : (
-              <div onClick={() => startEditing("q1")} className="bg-soft-lavender-bg rounded-xl px-3.5 py-3 text-[13px] leading-relaxed font-medium border-l-[3px] border-soft-lavender cursor-pointer hover:bg-soft-lavender-light transition-colors min-h-[44px]">
-                {profile.q1 ? <span className="text-soft-purple-deeper">{profile.q1}</span> : <span className="text-soft-muted-light italic">Tap to answer...</span>}
+              <div onClick={() => startEditing("q1")} className="cursor-pointer">
+                <div className="bg-soft-lavender-bg rounded-xl px-3.5 py-3 text-[13px] leading-relaxed font-medium border-l-[3px] border-soft-lavender hover:bg-soft-lavender-light transition-colors min-h-[44px]">
+                  {profile.q1 ? <span className="text-soft-purple-deeper">{profile.q1}</span> : <span className="text-soft-muted-light italic">Tap to answer...</span>}
+                </div>
+                <MediaPreview media={q1Media} small />
               </div>
             )}
           </div>
@@ -163,8 +232,30 @@ export default function ProfilePage() {
             {editing === "q2" ? (
               <div>
                 <textarea value={q2Draft} onChange={(e) => handleQ2Change(e.target.value)} autoFocus placeholder="Type your answer..." className="w-full bg-soft-lavender-bg rounded-xl px-3.5 py-3 text-[13px] text-soft-purple-deeper leading-relaxed font-medium border-l-[3px] border-soft-lavender outline-none resize-none min-h-[80px] focus:ring-2 focus:ring-soft-purple/20" />
+
+                {q2MediaDraft && (
+                  <div className="relative">
+                    <MediaPreview media={q2MediaDraft} />
+                    <button
+                      onClick={() => setQ2MediaDraft(null)}
+                      className="absolute top-4 right-2 bg-black/50 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs"
+                    >
+                      ✕
+                    </button>
+                  </div>
+                )}
+
                 <div className="flex items-center justify-between mt-1.5">
-                  <p className="text-[10px] text-soft-muted-light">{wordCount(q2Draft)} / 200 words</p>
+                  <div className="flex items-center gap-2">
+                    <p className="text-[10px] text-soft-muted-light">{wordCount(q2Draft)} / 200 words</p>
+                    <button
+                      onClick={() => q2FileRef.current?.click()}
+                      className="text-[11px] text-soft-purple font-semibold flex items-center gap-1 hover:text-soft-purple-dark transition-colors"
+                    >
+                      📷 Add photo/video
+                    </button>
+                    <input ref={q2FileRef} type="file" accept="image/*,video/*" className="hidden" onChange={(e) => handleFileSelect(e, setQ2MediaDraft)} />
+                  </div>
                   <div className="flex gap-2">
                     <button onClick={handleCancel} className="text-[12px] text-soft-muted font-semibold px-3 py-1 rounded-lg hover:bg-soft-lavender-bg transition-colors">Cancel</button>
                     <button onClick={handleSave} className="text-[12px] text-white font-semibold px-4 py-1 rounded-lg bg-soft-purple hover:bg-soft-purple-dark transition-colors">Save</button>
@@ -172,8 +263,11 @@ export default function ProfilePage() {
                 </div>
               </div>
             ) : (
-              <div onClick={() => startEditing("q2")} className="bg-soft-lavender-bg rounded-xl px-3.5 py-3 text-[13px] leading-relaxed font-medium border-l-[3px] border-soft-lavender cursor-pointer hover:bg-soft-lavender-light transition-colors min-h-[44px]">
-                {profile.q2 ? <span className="text-soft-purple-deeper">{profile.q2}</span> : <span className="text-soft-muted-light italic">Tap to answer...</span>}
+              <div onClick={() => startEditing("q2")} className="cursor-pointer">
+                <div className="bg-soft-lavender-bg rounded-xl px-3.5 py-3 text-[13px] leading-relaxed font-medium border-l-[3px] border-soft-lavender hover:bg-soft-lavender-light transition-colors min-h-[44px]">
+                  {profile.q2 ? <span className="text-soft-purple-deeper">{profile.q2}</span> : <span className="text-soft-muted-light italic">Tap to answer...</span>}
+                </div>
+                <MediaPreview media={q2Media} small />
               </div>
             )}
           </div>
@@ -260,26 +354,29 @@ export default function ProfilePage() {
               </div>
             </div>
 
-            {/* Emoji picker */}
+            {/* Scrollable emoji picker — 3 rows */}
             <div className="mb-4">
               <label className="text-[11px] text-soft-text-secondary font-semibold uppercase tracking-wider block mb-1.5">
                 Choose your avatar
               </label>
-              <div className="flex flex-wrap gap-1.5">
-                {AVATAR_EMOJIS.map((emoji) => (
-                  <button
-                    key={emoji}
-                    onClick={() => setEmojiDraft(emoji)}
-                    className={`w-9 h-9 rounded-lg text-lg flex items-center justify-center transition-all ${
-                      emojiDraft === emoji
-                        ? "bg-soft-purple scale-110 shadow-md"
-                        : "bg-soft-lavender-bg hover:bg-soft-lavender-light"
-                    }`}
-                  >
-                    {emoji}
-                  </button>
-                ))}
+              <div className="overflow-x-auto pb-2 -mx-1 px-1" style={{ scrollbarWidth: "none" }}>
+                <div className="grid grid-rows-3 grid-flow-col gap-1.5 w-max">
+                  {AVATAR_EMOJIS.map((emoji) => (
+                    <button
+                      key={emoji}
+                      onClick={() => setEmojiDraft(emoji)}
+                      className={`w-10 h-10 rounded-lg text-xl flex items-center justify-center transition-all flex-shrink-0 ${
+                        emojiDraft === emoji
+                          ? "bg-soft-purple scale-110 shadow-md"
+                          : "bg-soft-lavender-bg hover:bg-soft-lavender-light"
+                      }`}
+                    >
+                      {emoji}
+                    </button>
+                  ))}
+                </div>
               </div>
+              <p className="text-[10px] text-soft-muted-light mt-1">← Swipe for more →</p>
             </div>
 
             {/* Color picker */}
