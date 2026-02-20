@@ -12,7 +12,6 @@ async function detectWithNativeAPI(
   img: HTMLImageElement,
 ): Promise<{ hasFaces: boolean; faceCount: number } | null> {
   try {
-    // Check if native FaceDetector is available
     if (!("FaceDetector" in window)) return null;
 
     const detector = new (window as any).FaceDetector({
@@ -22,13 +21,13 @@ async function detectWithNativeAPI(
     const faces = await detector.detect(img);
     return { hasFaces: faces.length > 0, faceCount: faces.length };
   } catch {
-    return null; // API not available or failed
+    return null;
   }
 }
 
 // ─── face-api.js fallback ───
 
-let faceApiState: "idle" | "loading" | "ready" | "failed" = "idle";
+let faceApiState: string = "idle";
 let faceApiPromise: Promise<void> | null = null;
 
 function loadScript(src: string): Promise<void> {
@@ -50,7 +49,7 @@ async function initFaceApi(): Promise<boolean> {
   if (faceApiState === "failed") return false;
   if (faceApiState === "loading" && faceApiPromise) {
     await faceApiPromise;
-    return (faceApiState as string) === "ready";
+    return faceApiState === "ready";
   }
 
   faceApiState = "loading";
@@ -63,7 +62,6 @@ async function initFaceApi(): Promise<boolean> {
       const faceapi = (window as any).faceapi;
       if (!faceapi) throw new Error("face-api.js not on window");
 
-      // Try multiple CDN sources for model weights
       const modelUrls = [
         "https://cdn.jsdelivr.net/gh/justadudewhohacks/face-api.js@0.22.2/weights",
         "https://raw.githubusercontent.com/justadudewhohacks/face-api.js/master/weights",
@@ -123,7 +121,7 @@ function detectWithHeuristic(img: HTMLImageElement): {
 } {
   try {
     const canvas = document.createElement("canvas");
-    const size = 100; // Downsample for speed
+    const size = 100;
     canvas.width = size;
     canvas.height = size;
     const ctx = canvas.getContext("2d");
@@ -139,7 +137,6 @@ function detectWithHeuristic(img: HTMLImageElement): {
       const r = data[i],
         g = data[i + 1],
         b = data[i + 2];
-      // Broad skin tone detection across different skin colors
       if (
         r > 60 &&
         g > 40 &&
@@ -157,7 +154,6 @@ function detectWithHeuristic(img: HTMLImageElement): {
     }
 
     const skinRatio = skinPixels / totalPixels;
-    // If more than 30% of image is skin-toned, likely contains a person
     return {
       hasFaces: skinRatio > 0.3,
       faceCount: skinRatio > 0.3 ? 1 : 0,
@@ -176,7 +172,6 @@ export async function detectFaces(imageUrl: string): Promise<{
   method: string;
   error?: string;
 }> {
-  // Create image element
   const img = new Image();
   img.crossOrigin = "anonymous";
 
@@ -195,19 +190,16 @@ export async function detectFaces(imageUrl: string): Promise<{
     };
   }
 
-  // Method 1: Native FaceDetector API (Chrome/Edge)
   const nativeResult = await detectWithNativeAPI(img);
   if (nativeResult) {
     return { ...nativeResult, method: "native" };
   }
 
-  // Method 2: face-api.js
   const faceApiResult = await detectWithFaceApi(img);
   if (faceApiResult) {
     return { ...faceApiResult, method: "face-api" };
   }
 
-  // Method 3: Skin tone heuristic (last resort)
   const heuristicResult = detectWithHeuristic(img);
   if (heuristicResult.hasFaces) {
     return {
@@ -218,8 +210,6 @@ export async function detectFaces(imageUrl: string): Promise<{
     };
   }
 
-  // If NO detection method could confirm faces, but ML models failed to load,
-  // be strict and flag it as unverifiable
   return {
     hasFaces: false,
     faceCount: 0,
