@@ -5,6 +5,8 @@ import { createContext, useContext, useState, ReactNode } from "react";
 interface ProfileData {
   name: string;
   username: string;
+  avatarEmoji: string;
+  avatarColor: string;
   q1: string;
   q2: string;
   qualities: string[];
@@ -21,6 +23,8 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
   const [profile, setProfileState] = useState<ProfileData>({
     name: "Ray",
     username: "you",
+    avatarEmoji: "😊",
+    avatarColor: "#9B6BC2",
     q1: "",
     q2: "",
     qualities: ["", "", ""],

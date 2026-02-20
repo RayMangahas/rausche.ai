@@ -7,12 +7,26 @@ function wordCount(text: string) {
   return text.trim() === "" ? 0 : text.trim().split(/\s+/).length;
 }
 
+const AVATAR_EMOJIS = [
+  "😊", "😎", "🤓", "🥰", "😴", "🤔", "🌙", "🌸",
+  "🔥", "⭐", "🎵", "🎮", "📚", "🎨", "🐱", "🐶",
+  "🦋", "🌊", "☕", "🍕", "🏀", "🎧", "💜", "✨",
+];
+
+const AVATAR_COLORS = [
+  "#9B6BC2", "#B87FD6", "#7FB8D6", "#D6A87F",
+  "#7FD6A8", "#D67FA8", "#A87FD6", "#6B9BC2",
+  "#C27F7F", "#7FC2A8", "#C2A87F", "#7F8BC2",
+];
+
 export default function ProfilePage() {
   const { profile, setProfile } = useProfile();
 
   // Edit profile modal
   const [nameDraft, setNameDraft] = useState(profile.name);
   const [usernameDraft, setUsernameDraft] = useState(profile.username);
+  const [emojiDraft, setEmojiDraft] = useState(profile.avatarEmoji);
+  const [colorDraft, setColorDraft] = useState(profile.avatarColor);
   const [editingProfile, setEditingProfile] = useState(false);
 
   // Question editing
@@ -24,11 +38,9 @@ export default function ProfilePage() {
   const handleQ1Change = (val: string) => {
     if (wordCount(val) <= 200) setQ1Draft(val);
   };
-
   const handleQ2Change = (val: string) => {
     if (wordCount(val) <= 200) setQ2Draft(val);
   };
-
   const handleQualityChange = (index: number, val: string) => {
     if (val.length <= 20) {
       const updated = [...qualitiesDraft];
@@ -51,18 +63,23 @@ export default function ProfilePage() {
     setEditing(null);
   };
 
-  const handleCancel = () => {
-    setEditing(null);
-  };
+  const handleCancel = () => setEditing(null);
 
   const openEditProfile = () => {
     setNameDraft(profile.name);
     setUsernameDraft(profile.username);
+    setEmojiDraft(profile.avatarEmoji);
+    setColorDraft(profile.avatarColor);
     setEditingProfile(true);
   };
 
   const saveProfile = () => {
-    setProfile({ name: nameDraft, username: usernameDraft });
+    setProfile({
+      name: nameDraft,
+      username: usernameDraft,
+      avatarEmoji: emojiDraft,
+      avatarColor: colorDraft,
+    });
     setEditingProfile(false);
   };
 
@@ -70,22 +87,19 @@ export default function ProfilePage() {
     <div className="px-5 pt-6 pb-24">
       {/* Profile header */}
       <div className="flex items-center gap-4 mb-3">
-        <div className="w-16 h-16 rounded-soft bg-gradient-to-br from-soft-purple to-soft-lavender flex items-center justify-center text-white text-2xl font-bold font-display">
-          {profile.name.charAt(0).toUpperCase()}
+        <div
+          className="w-16 h-16 rounded-soft flex items-center justify-center text-3xl"
+          style={{ background: `linear-gradient(135deg, ${profile.avatarColor}, ${profile.avatarColor}88)` }}
+        >
+          {profile.avatarEmoji}
         </div>
         <div className="flex-1">
-          <h1 className="font-display font-bold text-xl text-soft-purple-deeper">
-            {profile.name}
-          </h1>
+          <h1 className="font-display font-bold text-xl text-soft-purple-deeper">{profile.name}</h1>
           <p className="text-soft-muted text-sm font-medium">@{profile.username}</p>
         </div>
       </div>
 
-      {/* Edit Profile Button */}
-      <button
-        onClick={openEditProfile}
-        className="w-full mb-5 py-2 rounded-xl border border-soft-lavender text-[13px] font-semibold text-soft-purple bg-white hover:bg-soft-lavender-bg transition-colors cursor-pointer"
-      >
+      <button onClick={openEditProfile} className="w-full mb-5 py-2 rounded-xl border border-soft-lavender text-[13px] font-semibold text-soft-purple bg-white hover:bg-soft-lavender-bg transition-colors cursor-pointer">
         Edit Profile
       </button>
 
@@ -96,25 +110,26 @@ export default function ProfilePage() {
           { label: "Circles", value: "3" },
           { label: "Communities", value: "5" },
         ].map((stat) => (
-          <div
-            key={stat.label}
-            className="bg-white rounded-soft border border-soft-lavender-border p-4 text-center"
-          >
-            <p className="font-bold text-xl text-soft-purple-deeper">
-              {stat.value}
-            </p>
-            <p className="text-[11px] text-soft-muted font-medium mt-0.5">
-              {stat.label}
-            </p>
+          <div key={stat.label} className="bg-white rounded-soft border border-soft-lavender-border p-4 text-center">
+            <p className="font-bold text-xl text-soft-purple-deeper">{stat.value}</p>
+            <p className="text-[11px] text-soft-muted font-medium mt-0.5">{stat.label}</p>
           </div>
         ))}
       </div>
 
       {/* Three Questions */}
       <div className="bg-white rounded-softer border border-soft-lavender-border p-5 mb-3">
-        <p className="text-[11px] text-soft-text-secondary font-semibold uppercase tracking-wider mb-4">
-          Get to know me
-        </p>
+        <div className="flex items-center gap-3 mb-4">
+          <div
+            className="w-9 h-9 rounded-lg flex items-center justify-center text-lg"
+            style={{ background: `linear-gradient(135deg, ${profile.avatarColor}33, ${profile.avatarColor}18)` }}
+          >
+            {profile.avatarEmoji}
+          </div>
+          <p className="text-[11px] text-soft-text-secondary font-semibold uppercase tracking-wider">
+            Get to know me
+          </p>
+        </div>
 
         <div className="flex flex-col gap-5">
           {/* Q1 */}
@@ -124,17 +139,9 @@ export default function ProfilePage() {
             </p>
             {editing === "q1" ? (
               <div>
-                <textarea
-                  value={q1Draft}
-                  onChange={(e) => handleQ1Change(e.target.value)}
-                  autoFocus
-                  placeholder="Type your answer..."
-                  className="w-full bg-soft-lavender-bg rounded-xl px-3.5 py-3 text-[13px] text-soft-purple-deeper leading-relaxed font-medium border-l-[3px] border-soft-lavender outline-none resize-none min-h-[80px] focus:ring-2 focus:ring-soft-purple/20"
-                />
+                <textarea value={q1Draft} onChange={(e) => handleQ1Change(e.target.value)} autoFocus placeholder="Type your answer..." className="w-full bg-soft-lavender-bg rounded-xl px-3.5 py-3 text-[13px] text-soft-purple-deeper leading-relaxed font-medium border-l-[3px] border-soft-lavender outline-none resize-none min-h-[80px] focus:ring-2 focus:ring-soft-purple/20" />
                 <div className="flex items-center justify-between mt-1.5">
-                  <p className="text-[10px] text-soft-muted-light">
-                    {wordCount(q1Draft)} / 200 words
-                  </p>
+                  <p className="text-[10px] text-soft-muted-light">{wordCount(q1Draft)} / 200 words</p>
                   <div className="flex gap-2">
                     <button onClick={handleCancel} className="text-[12px] text-soft-muted font-semibold px-3 py-1 rounded-lg hover:bg-soft-lavender-bg transition-colors">Cancel</button>
                     <button onClick={handleSave} className="text-[12px] text-white font-semibold px-4 py-1 rounded-lg bg-soft-purple hover:bg-soft-purple-dark transition-colors">Save</button>
@@ -143,11 +150,7 @@ export default function ProfilePage() {
               </div>
             ) : (
               <div onClick={() => startEditing("q1")} className="bg-soft-lavender-bg rounded-xl px-3.5 py-3 text-[13px] leading-relaxed font-medium border-l-[3px] border-soft-lavender cursor-pointer hover:bg-soft-lavender-light transition-colors min-h-[44px]">
-                {profile.q1 ? (
-                  <span className="text-soft-purple-deeper">{profile.q1}</span>
-                ) : (
-                  <span className="text-soft-muted-light italic">Tap to answer...</span>
-                )}
+                {profile.q1 ? <span className="text-soft-purple-deeper">{profile.q1}</span> : <span className="text-soft-muted-light italic">Tap to answer...</span>}
               </div>
             )}
           </div>
@@ -159,17 +162,9 @@ export default function ProfilePage() {
             </p>
             {editing === "q2" ? (
               <div>
-                <textarea
-                  value={q2Draft}
-                  onChange={(e) => handleQ2Change(e.target.value)}
-                  autoFocus
-                  placeholder="Type your answer..."
-                  className="w-full bg-soft-lavender-bg rounded-xl px-3.5 py-3 text-[13px] text-soft-purple-deeper leading-relaxed font-medium border-l-[3px] border-soft-lavender outline-none resize-none min-h-[80px] focus:ring-2 focus:ring-soft-purple/20"
-                />
+                <textarea value={q2Draft} onChange={(e) => handleQ2Change(e.target.value)} autoFocus placeholder="Type your answer..." className="w-full bg-soft-lavender-bg rounded-xl px-3.5 py-3 text-[13px] text-soft-purple-deeper leading-relaxed font-medium border-l-[3px] border-soft-lavender outline-none resize-none min-h-[80px] focus:ring-2 focus:ring-soft-purple/20" />
                 <div className="flex items-center justify-between mt-1.5">
-                  <p className="text-[10px] text-soft-muted-light">
-                    {wordCount(q2Draft)} / 200 words
-                  </p>
+                  <p className="text-[10px] text-soft-muted-light">{wordCount(q2Draft)} / 200 words</p>
                   <div className="flex gap-2">
                     <button onClick={handleCancel} className="text-[12px] text-soft-muted font-semibold px-3 py-1 rounded-lg hover:bg-soft-lavender-bg transition-colors">Cancel</button>
                     <button onClick={handleSave} className="text-[12px] text-white font-semibold px-4 py-1 rounded-lg bg-soft-purple hover:bg-soft-purple-dark transition-colors">Save</button>
@@ -178,11 +173,7 @@ export default function ProfilePage() {
               </div>
             ) : (
               <div onClick={() => startEditing("q2")} className="bg-soft-lavender-bg rounded-xl px-3.5 py-3 text-[13px] leading-relaxed font-medium border-l-[3px] border-soft-lavender cursor-pointer hover:bg-soft-lavender-light transition-colors min-h-[44px]">
-                {profile.q2 ? (
-                  <span className="text-soft-purple-deeper">{profile.q2}</span>
-                ) : (
-                  <span className="text-soft-muted-light italic">Tap to answer...</span>
-                )}
+                {profile.q2 ? <span className="text-soft-purple-deeper">{profile.q2}</span> : <span className="text-soft-muted-light italic">Tap to answer...</span>}
               </div>
             )}
           </div>
@@ -197,19 +188,8 @@ export default function ProfilePage() {
                 <div className="flex flex-wrap gap-2">
                   {qualitiesDraft.map((q, i) => (
                     <div key={i} className="relative">
-                      <input
-                        type="text"
-                        value={q}
-                        onChange={(e) => handleQualityChange(i, e.target.value)}
-                        placeholder={`Quality ${i + 1}`}
-                        maxLength={20}
-                        className="bg-soft-lavender-bg rounded-full px-3.5 py-1.5 text-xs font-semibold text-soft-purple border border-soft-lavender outline-none w-[120px] text-center placeholder:text-soft-muted-light placeholder:font-medium focus:ring-2 focus:ring-soft-purple/20"
-                      />
-                      {q && (
-                        <span className="absolute -top-1.5 -right-1.5 text-[8px] text-soft-muted-light bg-white rounded-full px-1">
-                          {q.length}/20
-                        </span>
-                      )}
+                      <input type="text" value={q} onChange={(e) => handleQualityChange(i, e.target.value)} placeholder={`Quality ${i + 1}`} maxLength={20} className="bg-soft-lavender-bg rounded-full px-3.5 py-1.5 text-xs font-semibold text-soft-purple border border-soft-lavender outline-none w-[120px] text-center placeholder:text-soft-muted-light placeholder:font-medium focus:ring-2 focus:ring-soft-purple/20" />
+                      {q && <span className="absolute -top-1.5 -right-1.5 text-[8px] text-soft-muted-light bg-white rounded-full px-1">{q.length}/20</span>}
                     </div>
                   ))}
                 </div>
@@ -246,10 +226,7 @@ export default function ProfilePage() {
           { label: "SoftSpace+ Subscription", icon: "⭐" },
           { label: "Help & Feedback", icon: "💬" },
         ].map((item, i) => (
-          <div
-            key={item.label}
-            className={`flex items-center gap-3 px-4 py-3.5 cursor-pointer hover:bg-soft-lavender-bg transition-colors ${i < 4 ? "border-b border-soft-lavender-border" : ""}`}
-          >
+          <div key={item.label} className={`flex items-center gap-3 px-4 py-3.5 cursor-pointer hover:bg-soft-lavender-bg transition-colors ${i < 4 ? "border-b border-soft-lavender-border" : ""}`}>
             <span className="text-lg">{item.icon}</span>
             <span className="text-sm font-semibold text-soft-purple-deeper flex-1">{item.label}</span>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#B0A6CC" strokeWidth="2" strokeLinecap="round"><path d="M9 18l6-6-6-6" /></svg>
@@ -257,9 +234,7 @@ export default function ProfilePage() {
         ))}
       </div>
 
-      <p className="text-center text-[11px] text-soft-muted-light mt-6 mb-4">
-        SoftSpace v0.1.0 · Made with 💜
-      </p>
+      <p className="text-center text-[11px] text-soft-muted-light mt-6 mb-4">SoftSpace v0.1.0 · Made with 💜</p>
 
       {/* Edit Profile Modal */}
       {editingProfile && (
@@ -270,22 +245,71 @@ export default function ProfilePage() {
         >
           <div
             onClick={(e) => e.stopPropagation()}
-            className="bg-white w-full max-w-[380px] px-5 pt-6 pb-7"
+            className="bg-white w-full max-w-[380px] px-5 pt-6 pb-7 max-h-[85vh] overflow-y-auto"
             style={{ borderRadius: "24px" }}
           >
             <h2 className="font-display font-bold text-lg text-soft-purple-deeper mb-5">Edit Profile</h2>
 
-            <div className="flex justify-center mb-5">
-              <div className="w-20 h-20 rounded-soft bg-gradient-to-br from-soft-purple to-soft-lavender flex items-center justify-center text-white text-3xl font-bold font-display">
-                {nameDraft.charAt(0).toUpperCase() || "?"}
+            {/* Avatar preview */}
+            <div className="flex justify-center mb-4">
+              <div
+                className="w-20 h-20 rounded-soft flex items-center justify-center text-4xl"
+                style={{ background: `linear-gradient(135deg, ${colorDraft}, ${colorDraft}88)` }}
+              >
+                {emojiDraft}
               </div>
             </div>
 
+            {/* Emoji picker */}
             <div className="mb-4">
+              <label className="text-[11px] text-soft-text-secondary font-semibold uppercase tracking-wider block mb-1.5">
+                Choose your avatar
+              </label>
+              <div className="flex flex-wrap gap-1.5">
+                {AVATAR_EMOJIS.map((emoji) => (
+                  <button
+                    key={emoji}
+                    onClick={() => setEmojiDraft(emoji)}
+                    className={`w-9 h-9 rounded-lg text-lg flex items-center justify-center transition-all ${
+                      emojiDraft === emoji
+                        ? "bg-soft-purple scale-110 shadow-md"
+                        : "bg-soft-lavender-bg hover:bg-soft-lavender-light"
+                    }`}
+                  >
+                    {emoji}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Color picker */}
+            <div className="mb-4">
+              <label className="text-[11px] text-soft-text-secondary font-semibold uppercase tracking-wider block mb-1.5">
+                Avatar color
+              </label>
+              <div className="flex flex-wrap gap-2">
+                {AVATAR_COLORS.map((color) => (
+                  <button
+                    key={color}
+                    onClick={() => setColorDraft(color)}
+                    className={`w-9 h-9 rounded-lg transition-all ${
+                      colorDraft === color
+                        ? "scale-110 shadow-md ring-2 ring-soft-purple ring-offset-2"
+                        : "hover:scale-105"
+                    }`}
+                    style={{ backgroundColor: color }}
+                  />
+                ))}
+              </div>
+            </div>
+
+            {/* Name input */}
+            <div className="mb-3">
               <label className="text-[11px] text-soft-text-secondary font-semibold uppercase tracking-wider block mb-1.5">Display Name</label>
               <input type="text" value={nameDraft} onChange={(e) => setNameDraft(e.target.value)} maxLength={30} placeholder="Your name" className="w-full bg-soft-lavender-bg rounded-xl px-4 py-3 text-[14px] text-soft-purple-deeper font-medium border border-soft-lavender-border outline-none focus:ring-2 focus:ring-soft-purple/20" />
             </div>
 
+            {/* Username input */}
             <div className="mb-6">
               <label className="text-[11px] text-soft-text-secondary font-semibold uppercase tracking-wider block mb-1.5">Username</label>
               <div className="flex items-center bg-soft-lavender-bg rounded-xl border border-soft-lavender-border focus-within:ring-2 focus-within:ring-soft-purple/20">
