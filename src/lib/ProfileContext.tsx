@@ -7,6 +7,9 @@ interface ProfileData {
   username: string;
   avatarEmoji: string;
   avatarColor: string;
+  avatarType: "emoji" | "text" | "photo";
+  avatarText: string;
+  avatarPhoto: string;
   q1: string;
   q2: string;
   qualities: string[];
@@ -25,6 +28,9 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
     username: "you",
     avatarEmoji: "😊",
     avatarColor: "#9B6BC2",
+    avatarType: "emoji",
+    avatarText: "",
+    avatarPhoto: "",
     q1: "",
     q2: "",
     qualities: ["", "", ""],
