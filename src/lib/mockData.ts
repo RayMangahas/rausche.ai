@@ -80,7 +80,7 @@ export const PING_PROMPTS = [
 export const ACTIVE_ROOMS: LiveRoom[] = [
   { id: 1, name: "Late Night Chill", people: 7, icon: "🎵", community: "Can't Sleep Club" },
   { id: 2, name: "Study Together", people: 4, icon: "📚", community: "First Gen Students" },
-  { id: 3, name: "New here 👋", people: 3, icon: "✨", community: "SoftSpace" },
+  { id: 3, name: "New here 👋", people: 3, icon: "✨", community: "Rausche Ai" },
 ];
 
 // ─── Community Posts ─────────────────────────────────────

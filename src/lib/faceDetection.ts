@@ -1,6 +1,6 @@
 "use client";
 
-// Face detection for SoftSpace avatar uploads
+// Face detection for Rausche Ai avatar uploads
 // Strategy:
 // 1. Try browser's native FaceDetector API (Chrome/Edge — fast, no downloads)
 // 2. Fall back to face-api.js tiny model from CDN

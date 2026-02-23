@@ -5,7 +5,7 @@ import { ProfileProvider } from "@/lib/ProfileContext";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "SoftSpace",
+  title: "Rausche Ai",
   description:
     "Where real conversations happen. Voice-first social for people who want genuine connection.",
   icons: {

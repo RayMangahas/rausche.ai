@@ -1,5 +1,5 @@
-// ─── SoftSpace Icons ─────────────────────────────────────────────
-// All icons as React components for the SoftSpace app
+// ─── Rausche Ai Icons ─────────────────────────────────────────────
+// All icons as React components for the Rausche Ai app
 
 interface IconProps {
   size?: number;
@@ -9,7 +9,7 @@ interface IconProps {
 
 // ─── Logo ────────────────────────────────────────────────────────
 
-export function SoftSpaceLogo({ size = 32 }: { size?: number }) {
+export function RauscheLogo({ size = 32 }: { size?: number }) {
   return (
     <svg width={size} height={size * 0.72} viewBox="0 0 100 72" fill="none">
       {/* Outer gold cloud */}
