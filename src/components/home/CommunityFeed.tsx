@@ -35,7 +35,9 @@ export default function CommunityFeed({ posts }: CommunityFeedProps) {
               <div className="flex items-center gap-2.5">
                 <span className="text-[22px]">{item.icon}</span>
                 <div>
-                  <p className="font-bold text-sm text-white">{item.community}</p>
+                  <p className="font-bold text-sm text-white">
+                    {item.community}
+                  </p>
                   <p className="text-[11px] text-white/65 mt-0.5 font-medium">
                     {item.memberCount} members · {item.post.activeNow} here now
                   </p>

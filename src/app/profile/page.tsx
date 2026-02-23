@@ -2,7 +2,6 @@
 
 import { useState, useRef } from "react";
 import { useProfile } from "@/lib/ProfileContext";
-import { detectFaces } from "@/lib/faceDetection";
 
 function wordCount(text: string) {
   return text.trim() === "" ? 0 : text.trim().split(/\s+/).length;
@@ -43,11 +42,6 @@ export default function ProfilePage() {
   const [editingProfile, setEditingProfile] = useState(false);
   const [customEmojiInput, setCustomEmojiInput] = useState("");
 
-  const [scanning, setScanning] = useState(false);
-  const [scanResult, setScanResult] = useState<"none" | "pass" | "fail" | "warn">("none");
-  const [scanMessage, setScanMessage] = useState("");
-  const [scanMethod, setScanMethod] = useState("");
-
   const [q1Draft, setQ1Draft] = useState("");
   const [q2Draft, setQ2Draft] = useState("");
   const [qualitiesDraft, setQualitiesDraft] = useState(["", "", ""]);
@@ -84,55 +78,13 @@ export default function ProfilePage() {
     setDraft({ url, type });
   };
 
-  const handleAvatarPhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleAvatarPhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
     const url = URL.createObjectURL(file);
-
-    setScanning(true);
-    setScanResult("none");
-    setScanMessage("Scanning photo for faces...");
-    setScanMethod("");
-    // Show preview while scanning
     setAvatarPhotoDraft(url);
-
-    try {
-      const result = await detectFaces(url);
-      setScanMethod(result.method);
-
-      if (result.hasFaces) {
-        // REJECT — face detected
-        setScanResult("fail");
-        const methodLabel =
-          result.method === "native" ? "Browser AI" :
-          result.method === "face-api" ? "Face detection AI" :
-          "Image analysis";
-        setScanMessage(
-          `${methodLabel} detected a face in this photo. SoftSpace doesn\u2019t allow photos of people — try a pet, sunset, or something you love!`
-        );
-        // Remove the preview
-        setAvatarPhotoDraft("");
-      } else if (result.error) {
-        // Couldn't fully verify — warn but allow
-        setScanResult("warn");
-        setScanMessage(result.error);
-        setAvatarTypeDraft("photo");
-      } else {
-        // PASS — clean
-        setScanResult("pass");
-        setScanMessage("No faces detected — photo accepted!");
-        setAvatarTypeDraft("photo");
-        setTimeout(() => setScanResult("none"), 4000);
-      }
-    } catch {
-      // Detection completely failed — be strict, reject
-      setScanResult("fail");
-      setScanMessage("Face detection failed to run. Please try again or use an emoji/letter avatar instead.");
-      setAvatarPhotoDraft("");
-    } finally {
-      setScanning(false);
-      if (avatarPhotoRef.current) avatarPhotoRef.current.value = "";
-    }
+    setAvatarTypeDraft("photo");
+    if (avatarPhotoRef.current) avatarPhotoRef.current.value = "";
   };
 
   const handleCustomEmoji = () => {
@@ -168,8 +120,6 @@ export default function ProfilePage() {
     setAvatarTypeDraft(profile.avatarType);
     setAvatarTextDraft(profile.avatarText);
     setAvatarPhotoDraft(profile.avatarPhoto);
-    setScanResult("none");
-    setScanMessage("");
     setEditingProfile(true);
   };
 
@@ -405,65 +355,23 @@ export default function ProfilePage() {
             {/* ── Photo mode ── */}
             {avatarTypeDraft === "photo" && (
               <div className="mb-4">
-                <button onClick={() => avatarPhotoRef.current?.click()} disabled={scanning}
-                  className={`w-full py-3 rounded-xl border-2 border-dashed text-[13px] font-semibold transition-colors cursor-pointer flex items-center justify-center gap-2 ${scanning ? "border-amber-300 bg-amber-50 text-amber-700 cursor-wait" : "border-soft-lavender text-soft-purple bg-soft-lavender-bg hover:bg-soft-lavender-light"}`}>
-                  {scanning ? (
-                    <><span className="inline-block animate-spin text-base">🔍</span> Scanning for faces...</>
-                  ) : (<>📷 Upload a photo</>)}
+                <button onClick={() => avatarPhotoRef.current?.click()}
+                  className="w-full py-3 rounded-xl border-2 border-dashed text-[13px] font-semibold transition-colors cursor-pointer flex items-center justify-center gap-2 border-soft-lavender text-soft-purple bg-soft-lavender-bg hover:bg-soft-lavender-light">
+                  📷 Upload a photo
                 </button>
                 <input ref={avatarPhotoRef} type="file" accept="image/*" className="hidden" onChange={handleAvatarPhotoUpload} />
 
-                {/* Always-visible policy */}
-                <div className="mt-2.5 bg-soft-lavender-bg border border-soft-lavender-border rounded-xl px-3.5 py-2.5">
-                  <p className="text-[11px] text-soft-purple-deep font-semibold flex items-center gap-1.5">🛡️ AI-powered face detection</p>
-                  <p className="text-[10px] text-soft-muted mt-0.5 leading-relaxed">Photos are automatically scanned. No photos of people allowed — try a pet, sunset, or something meaningful to you.</p>
-                </div>
-
-                {/* Scan results */}
-                {scanResult === "fail" && (
-                  <div className="mt-2 bg-red-50 border border-red-300 rounded-xl px-3.5 py-3">
-                    <p className="text-[12px] text-red-700 font-bold flex items-center gap-1.5">🚫 Photo rejected</p>
-                    <p className="text-[11px] text-red-600 mt-1 leading-relaxed">{scanMessage}</p>
-                  </div>
-                )}
-
-                {scanResult === "pass" && (
-                  <div className="mt-2 bg-green-50 border border-green-300 rounded-xl px-3.5 py-3">
-                    <p className="text-[12px] text-green-700 font-bold flex items-center gap-1.5">✅ {scanMessage}</p>
-                    {scanMethod && <p className="text-[10px] text-green-600 mt-0.5">Verified by: {scanMethod === "native" ? "Browser AI" : scanMethod === "face-api" ? "Face detection model" : "Image analysis"}</p>}
-                  </div>
-                )}
-
-                {scanResult === "warn" && (
-                  <div className="mt-2 bg-amber-50 border border-amber-300 rounded-xl px-3.5 py-3">
-                    <p className="text-[12px] text-amber-700 font-bold flex items-center gap-1.5">⚠️ Partial verification</p>
-                    <p className="text-[11px] text-amber-600 mt-1 leading-relaxed">{scanMessage}</p>
-                  </div>
-                )}
-
                 {/* Photo preview */}
-                {avatarPhotoDraft && !scanning && (
+                {avatarPhotoDraft && (
                   <div className="mt-2.5 relative">
                     <img src={avatarPhotoDraft} alt="Preview" className="w-full h-32 rounded-xl object-cover" />
-                    <button onClick={() => { setAvatarPhotoDraft(""); setScanResult("none"); }} className="absolute top-2 right-2 bg-black/50 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-black/70">✕</button>
-                  </div>
-                )}
-
-                {/* Scanning preview (dimmed) */}
-                {avatarPhotoDraft && scanning && (
-                  <div className="mt-2.5 relative">
-                    <img src={avatarPhotoDraft} alt="Scanning" className="w-full h-32 rounded-xl object-cover opacity-50" />
-                    <div className="absolute inset-0 mt-2 flex items-center justify-center">
-                      <div className="bg-white/90 rounded-lg px-4 py-2 text-[12px] font-semibold text-amber-700 flex items-center gap-2">
-                        <span className="inline-block animate-spin">🔍</span> Analyzing...
-                      </div>
-                    </div>
+                    <button onClick={() => setAvatarPhotoDraft("")} className="absolute top-2 right-2 bg-black/50 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-black/70">✕</button>
                   </div>
                 )}
               </div>
             )}
 
-            {/* Color picker — 2 rows */}
+            {/* Color picker */}
             <div className="mb-4">
               <label className="text-[11px] text-soft-text-secondary font-semibold uppercase tracking-wider block mb-1.5">{avatarTypeDraft === "photo" ? "Profile accent color" : "Avatar color"}</label>
               <div className="flex flex-wrap gap-2 mb-2.5">
