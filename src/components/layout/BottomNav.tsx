@@ -2,12 +2,17 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { MarketplaceIcon, CommunityIcon, FolderIcon, ProfileIcon } from "@/components/icons";
+import {
+  MarketplaceIcon,
+  CommunityIcon,
+  FolderIcon,
+  ProfileIcon,
+} from "@/components/icons";
 
 const NAV_ITEMS = [
-  { href: "/marketplace", label: "Market", Icon: MarketplaceIcon },
   { href: "/community", label: "Community", Icon: CommunityIcon },
   { href: "/folder", label: "Folder", Icon: FolderIcon },
+  { href: "/marketplace", label: "Market", Icon: MarketplaceIcon },
   { href: "/profile", label: "Profile", Icon: ProfileIcon },
 ];
 
@@ -28,7 +33,9 @@ export default function BottomNav() {
               <Icon active={isActive} />
               <span
                 className={`text-[10.5px] font-body ${
-                  isActive ? "font-bold text-soft-purple" : "font-medium text-[#A0A0A8]"
+                  isActive
+                    ? "font-bold text-soft-purple"
+                    : "font-medium text-[#A0A0A8]"
                 }`}
               >
                 {label}

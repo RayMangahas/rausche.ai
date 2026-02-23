@@ -1,4 +1,4 @@
-// ─── User Types ──────────────────────────────────────────────────
+// ─── User Types ──────────────────────────────────────────
 
 export interface OnlineUser {
   id: number;
@@ -8,13 +8,14 @@ export interface OnlineUser {
   color: string;
   initials: string;
   online: boolean;
+  inCircle: boolean;
 }
 
 export interface PingState {
   [userId: number]: string;
 }
 
-// ─── Room Types ──────────────────────────────────────────────────
+// ─── Room Types ──────────────────────────────────────────
 
 export interface LiveRoom {
   id: number;
@@ -24,7 +25,7 @@ export interface LiveRoom {
   community: string;
 }
 
-// ─── Community Types ─────────────────────────────────────────────
+// ─── Community Types ─────────────────────────────────────
 
 export interface CommunityPost {
   id: number;
@@ -40,6 +41,6 @@ export interface CommunityPost {
   };
 }
 
-// ─── Navigation ──────────────────────────────────────────────────
+// ─── Navigation ──────────────────────────────────────────
 
 export type NavTab = "home" | "marketplace" | "community" | "folder" | "profile";
