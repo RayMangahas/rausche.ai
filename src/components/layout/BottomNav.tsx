@@ -3,16 +3,12 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
-  MarketplaceIcon,
   CommunityIcon,
-  FolderIcon,
   ProfileIcon,
 } from "@/components/icons";
 
 const NAV_ITEMS = [
   { href: "/community", label: "Community", Icon: CommunityIcon },
-  { href: "/folder", label: "Folder", Icon: FolderIcon },
-  { href: "/marketplace", label: "Market", Icon: MarketplaceIcon },
   { href: "/profile", label: "Profile", Icon: ProfileIcon },
 ];
 
