@@ -82,7 +82,7 @@ export interface FriendProfile {
   vibe: string;
   interest: string;
   communities: string[];
-  stats: { calls: number; circles: number; communities: number };
+  stats: { following: number; followers: number; communities: number };
   q1: string;
   q2: string;
   qualities: string[];
@@ -99,7 +99,7 @@ export const FRIEND_PROFILES: FriendProfile[] = [
     vibe: "into late-night philosophy",
     interest: "Philosophy",
     communities: ["Can't Sleep Club", "Anxious but Trying"],
-    stats: { calls: 47, circles: 5, communities: 3 },
+    stats: { following: 38, followers: 124, communities: 3 },
     q1: "A good playlist and a long walk at night. Something about the quiet makes everything feel manageable.",
     q2: "Stoicism. I went down a Marcus Aurelius rabbit hole and now I journal every morning.",
     qualities: ["Thoughtful", "Resilient", "Curious"],
@@ -117,7 +117,7 @@ export const FRIEND_PROFILES: FriendProfile[] = [
     vibe: "stressed about midterms",
     interest: "Study buddy",
     communities: ["First Gen Students", "Anxious but Trying"],
-    stats: { calls: 31, circles: 4, communities: 4 },
+    stats: { following: 22, followers: 89, communities: 4 },
     q1: "Shooting hoops. Even just 10 minutes clears my head completely.",
     q2: "Sports analytics — I've been building my own models to predict NBA outcomes.",
     qualities: ["Driven", "Loyal", "Focused"],
@@ -134,7 +134,7 @@ export const FRIEND_PROFILES: FriendProfile[] = [
     vibe: "can't sleep again",
     interest: "Night owl",
     communities: ["Can't Sleep Club"],
-    stats: { calls: 18, circles: 2, communities: 2 },
+    stats: { following: 15, followers: 42, communities: 2 },
     q1: "Making pour-over coffee while it's still dark outside. That ritual grounds me.",
     q2: "Coffee origins — I can tell you the difference between Ethiopian and Colombian beans blind.",
     qualities: ["Calm", "Observant", "Kind"],
@@ -152,7 +152,7 @@ export const FRIEND_PROFILES: FriendProfile[] = [
     vibe: "new in town, looking for friends",
     interest: "Newcomer",
     communities: ["Rausche", "Anxious but Trying"],
-    stats: { calls: 6, circles: 1, communities: 2 },
+    stats: { following: 8, followers: 14, communities: 2 },
     q1: "Exploring a new neighborhood. Every time I move, I make myself find one new favorite spot.",
     q2: "Urban planning — I'm fascinated by how cities shape the way people connect.",
     qualities: ["Open", "Adventurous", "Genuine"],
@@ -169,7 +169,7 @@ export const FRIEND_PROFILES: FriendProfile[] = [
     vibe: "needs someone to vent to",
     interest: "Listener needed",
     communities: ["Anxious but Trying", "Can't Sleep Club"],
-    stats: { calls: 22, circles: 3, communities: 3 },
+    stats: { following: 19, followers: 67, communities: 3 },
     q1: "Rewatching comfort shows. There's something healing about already knowing how it ends.",
     q2: "Butterfly migration patterns — it started as a random YouTube video and now I'm obsessed.",
     qualities: ["Empathetic", "Creative", "Brave"],
@@ -186,7 +186,7 @@ export const FRIEND_PROFILES: FriendProfile[] = [
     vibe: "making music at 2am",
     interest: "Music",
     communities: ["Can't Sleep Club", "Founder Therapy"],
-    stats: { calls: 35, circles: 4, communities: 3 },
+    stats: { following: 41, followers: 203, communities: 3 },
     q1: "Playing guitar until my fingers hurt. Sounds dramatic but it works.",
     q2: "Lo-fi production — I've been making beats and I just hit 500 plays on one.",
     qualities: ["Creative", "Honest", "Passionate"],

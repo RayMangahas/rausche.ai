@@ -127,8 +127,8 @@ export default function FriendProfilePage() {
       {/* Stats */}
       <div className="grid grid-cols-3 gap-2.5 mb-5">
         {[
-          { label: "Calls", value: friend.stats.calls },
-          { label: "Circles", value: friend.stats.circles },
+          { label: "Following", value: friend.stats.following },
+          { label: "Followers", value: friend.stats.followers },
           { label: "Communities", value: friend.stats.communities },
         ].map((stat) => (
           <div key={stat.label} className="bg-white rounded-soft border border-soft-lavender-border p-4 text-center">
