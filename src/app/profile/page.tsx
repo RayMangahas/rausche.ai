@@ -284,17 +284,6 @@ export default function ProfilePage() {
 
         {echoes.length > 0 ? (
           <div className="flex gap-3 overflow-x-auto pb-2" style={{ scrollbarWidth: "none" }}>
-            {/* Add new echo button */}
-            <button
-              onClick={() => { setShowEchoComposer(true); setEchoType("text"); setEchoTextDraft(""); setRecordedAudioUrl(null); }}
-              className="flex-shrink-0 w-[100px] h-[130px] rounded-2xl border-2 border-dashed border-soft-lavender flex flex-col items-center justify-center gap-2 hover:bg-soft-lavender-bg transition-colors cursor-pointer"
-            >
-              <div className="w-10 h-10 rounded-full bg-soft-lavender-bg flex items-center justify-center">
-                <span className="text-soft-purple text-xl">+</span>
-              </div>
-              <span className="text-[10px] font-semibold text-soft-muted">Add Echo</span>
-            </button>
-
             {echoes.map((echo) => (
               <button
                 key={echo.id}
@@ -582,7 +571,7 @@ export default function ProfilePage() {
 
       {/* Settings */}
       <div className="bg-white rounded-softer border border-soft-lavender-border overflow-hidden">
-        {[{ label: "Edit Folder", icon: "📁" }, { label: "Notification Preferences", icon: "🔔" }, { label: "Privacy & Safety", icon: "🔒" }, { label: "Rausche Ai+ Subscription", icon: "⭐" }, { label: "Help & Feedback", icon: "💬" }].map((item, i) => (
+        {[{ label: "Edit Folder", icon: "📁" }, { label: "Notification Preferences", icon: "🔔" }, { label: "Privacy & Safety", icon: "🔒" }, { label: "Rausche+ Subscription", icon: "⭐" }, { label: "Help & Feedback", icon: "💬" }].map((item, i) => (
           <div key={item.label} className={`flex items-center gap-3 px-4 py-3.5 cursor-pointer hover:bg-soft-lavender-bg transition-colors ${i < 4 ? "border-b border-soft-lavender-border" : ""}`}>
             <span className="text-lg">{item.icon}</span>
             <span className="text-sm font-semibold text-soft-purple-deeper flex-1">{item.label}</span>
@@ -590,7 +579,7 @@ export default function ProfilePage() {
           </div>
         ))}
       </div>
-      <p className="text-center text-[11px] text-soft-muted-light mt-6 mb-4">Rausche Ai v0.1.0 · Made with 💜</p>
+      <p className="text-center text-[11px] text-soft-muted-light mt-6 mb-4">Rausche v0.1.0 · Made with 💜</p>
 
       {/* ────── Edit Profile Modal ────── */}
       {editingProfile && (

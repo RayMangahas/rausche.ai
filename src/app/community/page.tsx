@@ -29,7 +29,7 @@ const DEFAULT_COMMUNITIES: Community[] = [
   { name: "First Gen Students", members: "1.8K", icon: "📚", color: "#1B5E20", desc: "Navigating college when nobody showed you how", isOwned: false },
   { name: "Founder Therapy", members: "956", icon: "🧠", color: "#4A3040", desc: "Real talk about the startup grind", isOwned: false },
   { name: "Anxious but Trying", members: "4.1K", icon: "💛", color: "#2E4A3A", desc: "One small win at a time", isOwned: false },
-  { name: "Rausche Ai", members: "512", icon: "✨", color: "#4A3070", desc: "Welcome — share feedback and connect", isOwned: false },
+  { name: "Rausche", members: "512", icon: "✨", color: "#4A3070", desc: "Welcome — share feedback and connect", isOwned: false },
 ];
 
 const ICON_OPTIONS = ["🎵", "🎮", "🏀", "🎨", "🌍", "💪", "📚", "🎬", "🍕", "🐾", "🌙", "☕", "🧠", "💬", "🎓", "✨", "🌸", "🔥", "💛", "🎧"];
@@ -62,8 +62,8 @@ function getMockPosts(communityName: string): CommunityPost[] {
     { id: 2, author: "Rin", emoji: "🦋", color: "#D67FA8", text: "Made a phone call I'd been avoiding for 2 weeks", timeAgo: "20m ago", likes: 44, liked: true },
     { id: 3, author: "Drew", emoji: "🎸", color: "#A87FD6", text: "Went to the gym even though I almost didn't", timeAgo: "1h ago", likes: 38, liked: false },
   ];
-  if (communityName === "Rausche Ai") return [
-    { id: 1, author: "Ray", emoji: "✨", color: "#9B6BC2", text: "Welcome to Rausche Ai! Introduce yourself 👋", timeAgo: "1h ago", likes: 8, liked: false },
+  if (communityName === "Rausche") return [
+    { id: 1, author: "Ray", emoji: "✨", color: "#9B6BC2", text: "Welcome to Rausche! Introduce yourself 👋", timeAgo: "1h ago", likes: 8, liked: false },
     { id: 2, author: "Maya", emoji: "🌙", color: "#B87FD6", text: "Love the vibe here already", timeAgo: "3h ago", likes: 12, liked: true },
   ];
   return [

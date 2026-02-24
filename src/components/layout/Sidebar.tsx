@@ -69,7 +69,7 @@ export default function Sidebar() {
             { icon: "📚", name: "First Gen Students" },
             { icon: "🧠", name: "Founder Therapy" },
             { icon: "💛", name: "Anxious but Trying" },
-            { icon: "✨", name: "Rausche Ai" },
+            { icon: "✨", name: "Rausche" },
           ].map((c) => (
             <button
               key={c.name}

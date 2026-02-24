@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { CommunityIcon } from "@/components/icons";
+import { useProfile } from "@/lib/ProfileContext";
 
 export default function TopNav({
   onToggleFriends,
@@ -13,6 +13,7 @@ export default function TopNav({
   friendsOpen: boolean;
 }) {
   const [searchFocused, setSearchFocused] = useState(false);
+  const { profile } = useProfile();
 
   return (
     <header className="bg-white border-b border-soft-lavender-border sticky top-0 z-50 px-6 py-2.5">
@@ -20,11 +21,11 @@ export default function TopNav({
         {/* Name + Logo */}
         <Link href="/" className="flex items-center gap-2.5 no-underline flex-shrink-0">
           <span className="font-display font-bold text-xl text-soft-purple-deep tracking-tight">
-            Rausche Ai
+            Rausche
           </span>
           <Image
             src="/logo.png"
-            alt="Rausche Ai logo"
+            alt="Rausche logo"
             width={34}
             height={34}
             className="object-contain"
@@ -92,12 +93,20 @@ export default function TopNav({
             <span>Friends</span>
           </button>
 
-          {/* Profile */}
-          <Link
-            href="/profile"
-            className="w-9 h-9 rounded-full bg-gradient-to-br from-soft-lavender to-soft-purple flex items-center justify-center text-white text-sm font-bold font-display no-underline hover:shadow-md transition-shadow cursor-pointer"
-          >
-            R
+          {/* Profile Avatar - dynamic from profile context */}
+          <Link href="/profile" className="flex-shrink-0 no-underline">
+            <div
+              className="w-9 h-9 rounded-full flex items-center justify-center overflow-hidden hover:shadow-md transition-shadow cursor-pointer"
+              style={{ background: `linear-gradient(135deg, ${profile.avatarColor}, ${profile.avatarColor}88)` }}
+            >
+              {profile.avatarType === "photo" && profile.avatarPhoto ? (
+                <img src={profile.avatarPhoto} alt="Profile" className="w-full h-full object-cover" />
+              ) : profile.avatarType === "text" && profile.avatarText ? (
+                <span className="text-xs font-bold text-white font-display">{profile.avatarText}</span>
+              ) : (
+                <span className="text-lg">{profile.avatarEmoji}</span>
+              )}
+            </div>
           </Link>
         </div>
       </div>
