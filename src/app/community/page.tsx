@@ -381,10 +381,6 @@ export default function CommunityPage() {
       <h1 className="font-display font-bold text-2xl text-soft-purple-deeper mb-1">Communities</h1>
       <p className="text-soft-muted text-sm font-medium mb-5">Find your people</p>
 
-      <div className="bg-white rounded-soft border border-soft-lavender-border px-4 py-3 mb-4">
-        <p className="text-soft-muted-light text-sm">Search communities...</p>
-      </div>
-
       <button onClick={() => setShowCreate(true)} className="w-full mb-5 py-3 rounded-xl border-2 border-dashed border-soft-lavender text-[14px] font-semibold text-soft-purple bg-white hover:bg-soft-lavender-bg transition-colors cursor-pointer flex items-center justify-center gap-2">
         <span className="text-lg">+</span> Create a Community
       </button>

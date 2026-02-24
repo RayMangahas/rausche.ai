@@ -1,10 +1,27 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useProfile } from "@/lib/ProfileContext";
+
+interface Echo {
+  id: number;
+  type: "text" | "voice";
+  content: string; // text content or display label for voice
+  audioUrl?: string;
+  createdAt: number;
+}
 
 function wordCount(text: string) {
   return text.trim() === "" ? 0 : text.trim().split(/\s+/).length;
+}
+
+function timeRemaining(createdAt: number): string {
+  const ms = 24 * 60 * 60 * 1000 - (Date.now() - createdAt);
+  if (ms <= 0) return "expired";
+  const h = Math.floor(ms / (60 * 60 * 1000));
+  const m = Math.floor((ms % (60 * 60 * 1000)) / (60 * 1000));
+  if (h > 0) return `${h}h ${m}m left`;
+  return `${m}m left`;
 }
 
 const POPULAR_EMOJIS = [
@@ -56,6 +73,76 @@ export default function ProfilePage() {
   const q2FileRef = useRef<HTMLInputElement>(null);
   const colorPickerRef = useRef<HTMLInputElement>(null);
   const avatarPhotoRef = useRef<HTMLInputElement>(null);
+
+  // ─── Echoes (24h stories) ───
+  const [echoes, setEchoes] = useState<Echo[]>([
+    { id: 1, type: "text", content: "Can't sleep, anyone wanna talk? 🌙", createdAt: Date.now() - 2 * 60 * 60 * 1000 },
+    { id: 2, type: "voice", content: "Voice echo · 0:12", createdAt: Date.now() - 8 * 60 * 60 * 1000 },
+  ]);
+  const [showEchoComposer, setShowEchoComposer] = useState(false);
+  const [echoType, setEchoType] = useState<"text" | "voice">("text");
+  const [echoTextDraft, setEchoTextDraft] = useState("");
+  const [isRecording, setIsRecording] = useState(false);
+  const [recordingTime, setRecordingTime] = useState(0);
+  const [recordedAudioUrl, setRecordedAudioUrl] = useState<string | null>(null);
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const audioChunksRef = useRef<Blob[]>([]);
+  const recordingTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const [viewingEcho, setViewingEcho] = useState<Echo | null>(null);
+  const [, forceUpdate] = useState(0);
+
+  // Tick every minute to update time remaining
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setEchoes((prev) => prev.filter((e) => Date.now() - e.createdAt < 24 * 60 * 60 * 1000));
+      forceUpdate((n) => n + 1);
+    }, 60000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const startRecording = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const mediaRecorder = new MediaRecorder(stream);
+      mediaRecorderRef.current = mediaRecorder;
+      audioChunksRef.current = [];
+      mediaRecorder.ondataavailable = (e) => audioChunksRef.current.push(e.data);
+      mediaRecorder.onstop = () => {
+        const audioBlob = new Blob(audioChunksRef.current, { type: "audio/webm" });
+        const url = URL.createObjectURL(audioBlob);
+        setRecordedAudioUrl(url);
+        stream.getTracks().forEach((t) => t.stop());
+      };
+      mediaRecorder.start();
+      setIsRecording(true);
+      setRecordingTime(0);
+      recordingTimerRef.current = setInterval(() => setRecordingTime((t) => t + 1), 1000);
+    } catch {
+      alert("Microphone access is needed to record a voice echo.");
+    }
+  };
+
+  const stopRecording = () => {
+    mediaRecorderRef.current?.stop();
+    setIsRecording(false);
+    if (recordingTimerRef.current) clearInterval(recordingTimerRef.current);
+  };
+
+  const postEcho = () => {
+    if (echoType === "text" && echoTextDraft.trim()) {
+      setEchoes((prev) => [{ id: Date.now(), type: "text", content: echoTextDraft.trim(), createdAt: Date.now() }, ...prev]);
+    }
+    if (echoType === "voice" && recordedAudioUrl) {
+      const duration = recordingTime;
+      const m = Math.floor(duration / 60);
+      const s = duration % 60;
+      setEchoes((prev) => [{ id: Date.now(), type: "voice", content: `Voice echo · ${m}:${s.toString().padStart(2, "0")}`, audioUrl: recordedAudioUrl, createdAt: Date.now() }, ...prev]);
+    }
+    setEchoTextDraft("");
+    setRecordedAudioUrl(null);
+    setRecordingTime(0);
+    setShowEchoComposer(false);
+  };
 
   const handleQ1Change = (val: string) => { if (wordCount(val) <= 200) setQ1Draft(val); };
   const handleQ2Change = (val: string) => { if (wordCount(val) <= 200) setQ2Draft(val); };
@@ -177,6 +264,212 @@ export default function ProfilePage() {
           Edit Profile
         </button>
       </div>
+
+      {/* ─── Echoes (24h stories) ─── */}
+      <div className="bg-white rounded-softer border border-soft-lavender-border p-5 mb-5">
+        <div className="flex items-center justify-between mb-4">
+          <div>
+            <h2 className="font-display font-bold text-[15px] text-soft-purple-deeper flex items-center gap-2">
+              🔊 My Echoes
+            </h2>
+            <p className="text-[11px] text-soft-muted font-medium mt-0.5">Voice or text · fades in 24h</p>
+          </div>
+          <button
+            onClick={() => { setShowEchoComposer(true); setEchoType("text"); setEchoTextDraft(""); setRecordedAudioUrl(null); }}
+            className="px-3.5 py-1.5 rounded-full bg-soft-purple text-white text-[12px] font-semibold hover:bg-soft-purple-dark transition-colors"
+          >
+            + New Echo
+          </button>
+        </div>
+
+        {echoes.length > 0 ? (
+          <div className="flex gap-3 overflow-x-auto pb-2" style={{ scrollbarWidth: "none" }}>
+            {/* Add new echo button */}
+            <button
+              onClick={() => { setShowEchoComposer(true); setEchoType("text"); setEchoTextDraft(""); setRecordedAudioUrl(null); }}
+              className="flex-shrink-0 w-[100px] h-[130px] rounded-2xl border-2 border-dashed border-soft-lavender flex flex-col items-center justify-center gap-2 hover:bg-soft-lavender-bg transition-colors cursor-pointer"
+            >
+              <div className="w-10 h-10 rounded-full bg-soft-lavender-bg flex items-center justify-center">
+                <span className="text-soft-purple text-xl">+</span>
+              </div>
+              <span className="text-[10px] font-semibold text-soft-muted">Add Echo</span>
+            </button>
+
+            {echoes.map((echo) => (
+              <button
+                key={echo.id}
+                onClick={() => setViewingEcho(echo)}
+                className="flex-shrink-0 w-[140px] h-[130px] rounded-2xl p-3 flex flex-col justify-between text-left cursor-pointer border border-soft-lavender-border hover:shadow-md transition-all relative overflow-hidden"
+                style={{ background: echo.type === "voice" ? `linear-gradient(135deg, ${profile.avatarColor}22, ${profile.avatarColor}08)` : "white" }}
+              >
+                <div>
+                  <span className="text-sm">{echo.type === "voice" ? "🎙️" : "💬"}</span>
+                  <p className="text-[11.5px] font-medium text-soft-purple-deeper mt-1.5 line-clamp-3 leading-snug">
+                    {echo.content}
+                  </p>
+                </div>
+                <div className="flex items-center gap-1">
+                  <div className="w-1.5 h-1.5 rounded-full bg-soft-lavender animate-pulse" />
+                  <p className="text-[9px] text-soft-muted font-medium">{timeRemaining(echo.createdAt)}</p>
+                </div>
+              </button>
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-6">
+            <p className="text-3xl mb-2">🔊</p>
+            <p className="text-[13px] text-soft-muted font-medium">No echoes yet</p>
+            <p className="text-[11px] text-soft-muted-light mt-1">Share a voice or text echo — it disappears in 24h</p>
+          </div>
+        )}
+      </div>
+
+      {/* Echo Composer Modal */}
+      {showEchoComposer && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center px-5" style={{ background: "rgba(45, 34, 84, 0.6)", backdropFilter: "blur(8px)" }} onClick={() => { setShowEchoComposer(false); if (isRecording) stopRecording(); }}>
+          <div onClick={(e) => e.stopPropagation()} className="bg-white w-full max-w-[400px] px-5 pt-6 pb-7" style={{ borderRadius: "24px" }}>
+            <h2 className="font-display font-bold text-lg text-soft-purple-deeper mb-1">New Echo</h2>
+            <p className="text-[12px] text-soft-muted font-medium mb-5">Disappears in 24 hours</p>
+
+            {/* Type toggle */}
+            <div className="flex gap-1.5 mb-5 bg-soft-lavender-bg rounded-xl p-1">
+              <button
+                onClick={() => { setEchoType("text"); if (isRecording) stopRecording(); }}
+                className={`flex-1 py-2.5 rounded-lg text-[12px] font-semibold transition-all flex items-center justify-center gap-2 ${echoType === "text" ? "bg-white text-soft-purple shadow-sm" : "text-soft-muted hover:text-soft-purple-deep"}`}
+              >
+                💬 Text
+              </button>
+              <button
+                onClick={() => setEchoType("voice")}
+                className={`flex-1 py-2.5 rounded-lg text-[12px] font-semibold transition-all flex items-center justify-center gap-2 ${echoType === "voice" ? "bg-white text-soft-purple shadow-sm" : "text-soft-muted hover:text-soft-purple-deep"}`}
+              >
+                🎙️ Voice
+              </button>
+            </div>
+
+            {/* Text composer */}
+            {echoType === "text" && (
+              <div>
+                <textarea
+                  value={echoTextDraft}
+                  onChange={(e) => { if (e.target.value.length <= 280) setEchoTextDraft(e.target.value); }}
+                  autoFocus
+                  placeholder="What's on your mind right now?"
+                  className="w-full bg-soft-lavender-bg rounded-xl px-4 py-3.5 text-[14px] text-soft-purple-deeper leading-relaxed font-medium border border-soft-lavender-border outline-none resize-none min-h-[120px] focus:ring-2 focus:ring-soft-purple/20"
+                />
+                <p className="text-[10px] text-soft-muted-light mt-1.5 text-right">{echoTextDraft.length} / 280</p>
+              </div>
+            )}
+
+            {/* Voice composer */}
+            {echoType === "voice" && (
+              <div className="text-center py-4">
+                {!recordedAudioUrl ? (
+                  <>
+                    <button
+                      onClick={isRecording ? stopRecording : startRecording}
+                      className={`w-20 h-20 rounded-full flex items-center justify-center text-3xl mx-auto transition-all ${
+                        isRecording
+                          ? "bg-red-500 text-white animate-pulse shadow-lg shadow-red-500/30"
+                          : "bg-soft-lavender-bg text-soft-purple hover:bg-soft-lavender-light hover:shadow-md"
+                      }`}
+                    >
+                      {isRecording ? "⏹" : "🎙️"}
+                    </button>
+                    <p className="text-[13px] text-soft-purple-deeper font-semibold mt-3">
+                      {isRecording ? `Recording... ${Math.floor(recordingTime / 60)}:${(recordingTime % 60).toString().padStart(2, "0")}` : "Tap to record"}
+                    </p>
+                    <p className="text-[11px] text-soft-muted mt-1">
+                      {isRecording ? "Tap again to stop" : "Up to 60 seconds"}
+                    </p>
+                  </>
+                ) : (
+                  <>
+                    <div className="bg-soft-lavender-bg rounded-2xl p-4 mb-3">
+                      <p className="text-sm mb-2">🎙️ Voice echo ready</p>
+                      <audio src={recordedAudioUrl} controls className="w-full" />
+                      <p className="text-[11px] text-soft-muted mt-2">{Math.floor(recordingTime / 60)}:{(recordingTime % 60).toString().padStart(2, "0")} recorded</p>
+                    </div>
+                    <button
+                      onClick={() => { setRecordedAudioUrl(null); setRecordingTime(0); }}
+                      className="text-[12px] text-soft-muted font-semibold hover:text-red-500 transition-colors"
+                    >
+                      🗑️ Discard & re-record
+                    </button>
+                  </>
+                )}
+              </div>
+            )}
+
+            {/* Actions */}
+            <div className="flex gap-3 mt-5">
+              <button
+                onClick={() => { setShowEchoComposer(false); if (isRecording) stopRecording(); }}
+                className="flex-1 py-3 rounded-xl border border-soft-lavender text-[13px] font-semibold text-soft-muted hover:bg-soft-lavender-bg transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={postEcho}
+                disabled={(echoType === "text" && !echoTextDraft.trim()) || (echoType === "voice" && !recordedAudioUrl)}
+                className={`flex-1 py-3 rounded-xl text-[13px] font-semibold transition-colors ${
+                  (echoType === "text" && echoTextDraft.trim()) || (echoType === "voice" && recordedAudioUrl)
+                    ? "bg-soft-purple text-white hover:bg-soft-purple-dark"
+                    : "bg-soft-lavender-light text-soft-muted-light cursor-not-allowed"
+                }`}
+              >
+                Post Echo
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Echo Viewer Modal */}
+      {viewingEcho && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center px-5" style={{ background: "rgba(45, 34, 84, 0.85)", backdropFilter: "blur(12px)" }} onClick={() => setViewingEcho(null)}>
+          <div onClick={(e) => e.stopPropagation()} className="w-full max-w-[380px] text-center">
+            {/* Progress bar */}
+            <div className="w-full bg-white/20 rounded-full h-1 mb-6">
+              <div className="bg-white rounded-full h-1" style={{ width: `${Math.max(0, 100 - ((Date.now() - viewingEcho.createdAt) / (24 * 60 * 60 * 1000)) * 100)}%` }} />
+            </div>
+
+            {/* User info */}
+            <div className="flex items-center justify-center gap-3 mb-6">
+              <div className="w-10 h-10 rounded-xl flex items-center justify-center overflow-hidden" style={{ background: `linear-gradient(135deg, ${profile.avatarColor}, ${profile.avatarColor}88)` }}>
+                {profile.avatarType === "photo" && profile.avatarPhoto
+                  ? <img src={profile.avatarPhoto} alt="" className="w-full h-full object-cover" />
+                  : profile.avatarType === "text" && profile.avatarText
+                  ? <span className="text-sm font-bold text-white font-display">{profile.avatarText}</span>
+                  : <span className="text-xl">{profile.avatarEmoji}</span>
+                }
+              </div>
+              <div className="text-left">
+                <p className="text-white font-bold text-sm">{profile.name}</p>
+                <p className="text-white/50 text-[11px] font-medium">{timeRemaining(viewingEcho.createdAt)}</p>
+              </div>
+            </div>
+
+            {/* Echo content */}
+            <div className="bg-white/10 rounded-3xl p-8 backdrop-blur-sm">
+              {viewingEcho.type === "text" ? (
+                <p className="text-white text-lg font-medium leading-relaxed">{viewingEcho.content}</p>
+              ) : (
+                <div>
+                  <span className="text-5xl mb-4 block">🎙️</span>
+                  {viewingEcho.audioUrl ? (
+                    <audio src={viewingEcho.audioUrl} controls className="w-full mt-4" />
+                  ) : (
+                    <p className="text-white/70 text-sm font-medium">{viewingEcho.content}</p>
+                  )}
+                </div>
+              )}
+            </div>
+
+            <p className="text-white/30 text-[11px] font-medium mt-4">Tap outside to close</p>
+          </div>
+        </div>
+      )}
 
       {/* Stats */}
       <div className="grid grid-cols-3 gap-2.5 mb-5">
