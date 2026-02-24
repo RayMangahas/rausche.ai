@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
-import DesktopShell from "@/components/layout/DesktopShell";
+import { AuthProvider } from "@/lib/AuthContext";
 import { ProfileProvider } from "@/lib/ProfileContext";
+import DesktopShell from "@/components/layout/DesktopShell";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -20,9 +21,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="font-body bg-[#F0ECF6]">
-        <ProfileProvider>
-          <DesktopShell>{children}</DesktopShell>
-        </ProfileProvider>
+        <AuthProvider>
+          <ProfileProvider>
+            <DesktopShell>{children}</DesktopShell>
+          </ProfileProvider>
+        </AuthProvider>
       </body>
     </html>
   );

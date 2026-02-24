@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { useProfile } from "@/lib/ProfileContext";
+import { useAuth } from "@/lib/AuthContext";
 
 interface Echo {
   id: number;
@@ -47,7 +48,8 @@ const PRESET_COLORS = [
 ];
 
 export default function ProfilePage() {
-  const { profile, setProfile } = useProfile();
+  const { profile, setProfile, saveProfile } = useProfile();
+  const { signOut } = useAuth();
 
   const [nameDraft, setNameDraft] = useState(profile.name);
   const [usernameDraft, setUsernameDraft] = useState(profile.username);
@@ -579,7 +581,15 @@ export default function ProfilePage() {
           </div>
         ))}
       </div>
-      <p className="text-center text-[11px] text-soft-muted-light mt-6 mb-4">Rausche v0.1.0 · Made with 💜</p>
+      <p className="text-center text-[11px] text-soft-muted-light mt-6 mb-2">Rausche v0.1.0 · Made with 💜</p>
+
+      {/* Sign Out */}
+      <button
+        onClick={signOut}
+        className="w-full py-3 rounded-xl border border-red-200 text-red-500 text-sm font-semibold hover:bg-red-50 transition-colors cursor-pointer mb-6 bg-white"
+      >
+        Sign Out
+      </button>
 
       {/* ────── Edit Profile Modal ────── */}
       {editingProfile && (
