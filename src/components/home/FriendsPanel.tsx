@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { OnlineUser, PingState } from "@/types";
 import { MicIcon } from "@/components/icons";
 
@@ -48,24 +49,22 @@ export default function FriendsPanel({
           {users.map((user) => {
             const isPinged = !!pingState[user.id];
             return (
-              <button
+              <div
                 key={user.id}
-                onClick={() => !isPinged && onUserTap(user)}
-                disabled={isPinged}
                 className={`
-                  text-left rounded-soft p-3.5 border transition-all duration-200 w-full
+                  rounded-soft p-3.5 border transition-all duration-200 w-full
                   ${
                     isPinged
-                      ? "bg-gradient-to-br from-soft-lavender-light to-soft-lavender-bg border-soft-lavender cursor-default"
-                      : "bg-white border-soft-lavender-border cursor-pointer hover:border-soft-lavender hover:shadow-sm"
+                      ? "bg-gradient-to-br from-soft-lavender-light to-soft-lavender-bg border-soft-lavender"
+                      : "bg-white border-soft-lavender-border hover:border-soft-lavender hover:shadow-sm"
                   }
                 `}
               >
                 <div className="flex items-center gap-3">
                   {/* Avatar */}
-                  <div className="relative flex-shrink-0">
+                  <Link href={`/profile/${user.username}`} onClick={onClose} className="relative flex-shrink-0 no-underline">
                     <div
-                      className="w-10 h-10 rounded-[13px] flex items-center justify-center text-white text-base font-bold font-display"
+                      className="w-10 h-10 rounded-[13px] flex items-center justify-center text-white text-base font-bold font-display hover:shadow-md transition-shadow"
                       style={{
                         background: `linear-gradient(135deg, ${user.color}, ${user.color}88)`,
                       }}
@@ -73,31 +72,43 @@ export default function FriendsPanel({
                       {user.initials}
                     </div>
                     <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-soft-online border-2 border-white" />
-                  </div>
+                  </Link>
 
-                  {/* Info */}
+                  {/* Info - clickable name and username */}
                   <div className="flex-1 min-w-0">
-                    <p className="font-bold text-sm text-soft-purple-deeper font-body">
-                      {user.name}
-                    </p>
-                    <p className="text-[11.5px] text-soft-muted leading-snug font-medium truncate">
+                    <Link
+                      href={`/profile/${user.username}`}
+                      onClick={onClose}
+                      className="no-underline block group"
+                    >
+                      <p className="font-bold text-sm text-soft-purple-deeper font-body group-hover:text-soft-purple transition-colors">
+                        {user.name}
+                      </p>
+                      <p className="text-[10.5px] text-soft-muted-light font-medium">
+                        @{user.username}
+                      </p>
+                    </Link>
+                    <p className="text-[11px] text-soft-muted leading-snug font-medium truncate mt-0.5">
                       {user.vibe}
                     </p>
                   </div>
 
-                  {/* Interest Tag */}
-                  <span className="inline-flex items-center bg-soft-lavender-bg rounded-lg px-2 py-0.5 text-[10.5px] font-semibold text-soft-purple flex-shrink-0">
-                    {user.interest}
-                  </span>
+                  {/* Ping button */}
+                  {!isPinged ? (
+                    <button
+                      onClick={() => onUserTap(user)}
+                      className="inline-flex items-center bg-soft-lavender-bg rounded-lg px-2.5 py-1.5 text-[10.5px] font-semibold text-soft-purple flex-shrink-0 hover:bg-soft-lavender-light transition-colors cursor-pointer border-none"
+                    >
+                      👋 Ping
+                    </button>
+                  ) : (
+                    <span className="inline-flex items-center gap-1 text-[10.5px] font-semibold text-soft-purple flex-shrink-0">
+                      <MicIcon size={12} />
+                      Sent
+                    </span>
+                  )}
                 </div>
-
-                {isPinged && (
-                  <div className="mt-2 flex items-center gap-1 text-[11px] font-semibold text-soft-purple ml-13">
-                    <MicIcon size={12} />
-                    <span>Ping sent</span>
-                  </div>
-                )}
-              </button>
+              </div>
             );
           })}
         </div>

@@ -3,6 +3,7 @@
 export interface OnlineUser {
   id: number;
   name: string;
+  username: string;
   vibe: string;
   interest: string;
   color: string;
