@@ -16,7 +16,7 @@ export default function TopNav({
 
   return (
     <header className="bg-white border-b border-soft-lavender-border sticky top-0 z-50 px-6 py-2.5">
-      <div className="flex items-center gap-6 max-w-[1400px] mx-auto">
+      <div className="flex items-center gap-6 w-full">
         {/* Name + Logo */}
         <Link href="/" className="flex items-center gap-2.5 no-underline flex-shrink-0">
           <span className="font-display font-bold text-xl text-soft-purple-deep tracking-tight">
