@@ -461,8 +461,8 @@ export default function ProfilePage() {
       )}
 
       {/* Stats */}
-      <div className="grid grid-cols-3 gap-2.5 mb-5">
-        {[{ label: "Following", value: "12" }, { label: "Followers", value: "34" }, { label: "Communities", value: "5" }].map((stat) => (
+      <div className="grid grid-cols-4 gap-2.5 mb-5">
+        {[{ label: "Following", value: "12" }, { label: "Followers", value: "34" }, { label: "Circles", value: "3" }, { label: "Communities", value: "5" }].map((stat) => (
           <div key={stat.label} className="bg-white rounded-soft border border-soft-lavender-border p-4 text-center">
             <p className="font-bold text-xl text-soft-purple-deeper">{stat.value}</p>
             <p className="text-[11px] text-soft-muted font-medium mt-0.5">{stat.label}</p>
