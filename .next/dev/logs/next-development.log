@@ -1,18 +1,13 @@
-[00:00:01.171] Server  WARN    ⚠ The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
-[00:00:01.257] Server  LOG     ✓ Ready in 988ms
-[00:00:12.479] Server  ERROR   ⨯ Error: Your project's URL and Key are required to create a Supabase client!
+[00:00:00.697] Server  WARN    ⚠ The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+[00:00:00.773] Server  LOG     ✓ Ready in 549ms
+[00:00:22.269] Server  ERROR   ⨯ Error: Your project's URL and Key are required to create a Supabase client!
 
 Check your Supabase project's API settings to find these values
 
 https://supabase.com/dashboard/project/_/settings/api
-[00:00:13.378] Server  ERROR   ⨯ Error: Your project's URL and Key are required to create a Supabase client!
+[00:00:23.082] Browser ERROR   uncaughtError: Error: Your project's URL and Key are required to create a Supabase client!
 
 Check your Supabase project's API settings to find these values
 
 https://supabase.com/dashboard/project/_/settings/api
-[00:00:13.552] Browser ERROR   uncaughtError: Error: Your project's URL and Key are required to create a Supabase client!
-
-Check your Supabase project's API settings to find these values
-
-https://supabase.com/dashboard/project/_/settings/api
-[00:00:16.054] Server  LOG     ○ Compiling /_not-found/page ...
+[00:00:25.826] Server  LOG     ○ Compiling /_not-found/page ...
