@@ -67,6 +67,8 @@ export default function Sidebar() {
           {[
             { icon: "🌙", name: "Can't Sleep Club" },
             { icon: "📚", name: "First Gen Students" },
+            { icon: "🧠", name: "Founder Therapy" },
+            { icon: "💛", name: "Anxious but Trying" },
             { icon: "✨", name: "Rausche Ai" },
           ].map((c) => (
             <button

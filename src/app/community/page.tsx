@@ -25,9 +25,11 @@ interface CommunityPost {
 }
 
 const DEFAULT_COMMUNITIES: Community[] = [
-  { name: "Cats", members: "5.2K", icon: "🐱", color: "#4A3070", desc: "Everything cats — pics, stories, and purrs", isOwned: false },
-  { name: "Dogs", members: "4.7K", icon: "🐶", color: "#2D4A30", desc: "Good boys, good girls, good vibes", isOwned: false },
-  { name: "Photos", members: "4.1K", icon: "📸", color: "#4A3040", desc: "Share what you see through your lens", isOwned: false },
+  { name: "Can't Sleep Club", members: "2.3K", icon: "🌙", color: "#2D2254", desc: "For the ones whose brains won't turn off at night", isOwned: false },
+  { name: "First Gen Students", members: "1.8K", icon: "📚", color: "#1B5E20", desc: "Navigating college when nobody showed you how", isOwned: false },
+  { name: "Founder Therapy", members: "956", icon: "🧠", color: "#4A3040", desc: "Real talk about the startup grind", isOwned: false },
+  { name: "Anxious but Trying", members: "4.1K", icon: "💛", color: "#2E4A3A", desc: "One small win at a time", isOwned: false },
+  { name: "Rausche Ai", members: "512", icon: "✨", color: "#4A3070", desc: "Welcome — share feedback and connect", isOwned: false },
 ];
 
 const ICON_OPTIONS = ["🎵", "🎮", "🏀", "🎨", "🌍", "💪", "📚", "🎬", "🍕", "🐾", "🌙", "☕", "🧠", "💬", "🎓", "✨", "🌸", "🔥", "💛", "🎧"];
@@ -40,21 +42,29 @@ const COLOR_OPTIONS = [
 
 // Mock posts per community
 function getMockPosts(communityName: string): CommunityPost[] {
-  if (communityName === "Cats") return [
-    { id: 1, author: "Maya", emoji: "🌙", color: "#B87FD6", text: "My cat watching birds outside the window for 3 hours straight 😂", timeAgo: "2m ago", likes: 12, liked: false },
-    { id: 2, author: "Jordan", emoji: "🏀", color: "#7FB8D6", text: "Check out this cat who learned to open doors!", link: parseLink("https://youtube.com/watch?v=dQw4w9WgXcQ") ?? undefined, timeAgo: "15m ago", likes: 24, liked: true },
-    { id: 3, author: "Sam", emoji: "☕", color: "#D6A87F", text: "Found this hilarious cat compilation on TikTok", link: parseLink("https://tiktok.com/@cats/video/7123456789") ?? undefined, timeAgo: "1h ago", likes: 8, liked: false },
-    { id: 4, author: "Alex", emoji: "🌿", color: "#7FD6A8", text: "My cat just knocked my coffee off the desk. Again. 🙃", timeAgo: "2h ago", likes: 31, liked: false },
+  if (communityName === "Can't Sleep Club") return [
+    { id: 1, author: "Maya", emoji: "🌙", color: "#B87FD6", text: "What's keeping you up tonight?", timeAgo: "2m ago", likes: 47, liked: false },
+    { id: 2, author: "Sam", emoji: "☕", color: "#D6A87F", text: "Overthinking a conversation from 3 days ago", timeAgo: "15m ago", likes: 24, liked: true },
+    { id: 3, author: "Alex", emoji: "🌿", color: "#7FD6A8", text: "My brain decided now is the time to plan my whole future", timeAgo: "1h ago", likes: 31, liked: false },
   ];
-  if (communityName === "Dogs") return [
-    { id: 1, author: "Rin", emoji: "🦋", color: "#D67FA8", text: "Golden retriever puppy's first snow day ❄️", link: parseLink("https://youtube.com/watch?v=dQw4w9WgXcQ") ?? undefined, timeAgo: "5m ago", likes: 42, liked: true },
-    { id: 2, author: "Drew", emoji: "🎸", color: "#A87FD6", text: "My dog howls every time I play guitar 😂 Anyone else?", timeAgo: "30m ago", likes: 19, liked: false },
-    { id: 3, author: "Maya", emoji: "🌙", color: "#B87FD6", text: "This tweet about a dog waiting for its owner had me crying", link: parseLink("https://x.com/dog_feelings/status/123456789") ?? undefined, timeAgo: "2h ago", likes: 56, liked: true },
+  if (communityName === "First Gen Students") return [
+    { id: 1, author: "Jordan", emoji: "🏀", color: "#7FB8D6", text: "What's something you wish someone told you before college?", timeAgo: "5m ago", likes: 83, liked: true },
+    { id: 2, author: "Rin", emoji: "🦋", color: "#D67FA8", text: "It's okay to not know the unwritten rules", timeAgo: "30m ago", likes: 19, liked: false },
+    { id: 3, author: "Drew", emoji: "🎸", color: "#A87FD6", text: "Office hours are literally free mentoring", timeAgo: "2h ago", likes: 56, liked: true },
   ];
-  if (communityName === "Photos") return [
-    { id: 1, author: "Sam", emoji: "☕", color: "#D6A87F", text: "Golden hour at the lake today 🌅", timeAgo: "10m ago", likes: 33, liked: false },
-    { id: 2, author: "Alex", emoji: "🌿", color: "#7FD6A8", text: "Amazing photography tutorial I found", link: parseLink("https://youtube.com/watch?v=dQw4w9WgXcQ") ?? undefined, timeAgo: "45m ago", likes: 15, liked: false },
-    { id: 3, author: "Jordan", emoji: "🏀", color: "#7FB8D6", text: "Check this photographer's IG — insane street photos", link: parseLink("https://instagram.com/streetphoto") ?? undefined, timeAgo: "3h ago", likes: 27, liked: true },
+  if (communityName === "Founder Therapy") return [
+    { id: 1, author: "Sam", emoji: "☕", color: "#D6A87F", text: "Biggest lesson from your last failure?", timeAgo: "10m ago", likes: 31, liked: false },
+    { id: 2, author: "Alex", emoji: "🌿", color: "#7FD6A8", text: "The idea wasn't the problem, the timing was", timeAgo: "45m ago", likes: 15, liked: false },
+    { id: 3, author: "Maya", emoji: "🌙", color: "#B87FD6", text: "I confused being busy with making progress", timeAgo: "3h ago", likes: 27, liked: true },
+  ];
+  if (communityName === "Anxious but Trying") return [
+    { id: 1, author: "Jordan", emoji: "🏀", color: "#7FB8D6", text: "One small win from today?", timeAgo: "3m ago", likes: 112, liked: false },
+    { id: 2, author: "Rin", emoji: "🦋", color: "#D67FA8", text: "Made a phone call I'd been avoiding for 2 weeks", timeAgo: "20m ago", likes: 44, liked: true },
+    { id: 3, author: "Drew", emoji: "🎸", color: "#A87FD6", text: "Went to the gym even though I almost didn't", timeAgo: "1h ago", likes: 38, liked: false },
+  ];
+  if (communityName === "Rausche Ai") return [
+    { id: 1, author: "Ray", emoji: "✨", color: "#9B6BC2", text: "Welcome to Rausche Ai! Introduce yourself 👋", timeAgo: "1h ago", likes: 8, liked: false },
+    { id: 2, author: "Maya", emoji: "🌙", color: "#B87FD6", text: "Love the vibe here already", timeAgo: "3h ago", likes: 12, liked: true },
   ];
   return [
     { id: 1, author: "You", emoji: "😊", color: "#9B6BC2", text: "Welcome to this community! Share something cool.", timeAgo: "just now", likes: 0, liked: false },
