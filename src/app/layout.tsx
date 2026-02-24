@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
-import TopNav from "@/components/layout/TopNav";
-import BottomNav from "@/components/layout/BottomNav";
+import DesktopShell from "@/components/layout/DesktopShell";
 import { ProfileProvider } from "@/lib/ProfileContext";
 import "./globals.css";
 
@@ -20,13 +19,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="font-body">
+      <body className="font-body bg-[#F0ECF6]">
         <ProfileProvider>
-          <div className="max-w-[430px] mx-auto min-h-screen flex flex-col bg-soft-lavender-bg relative">
-            <TopNav />
-            <main className="flex-1 overflow-y-auto pb-20">{children}</main>
-            <BottomNav />
-          </div>
+          <DesktopShell>{children}</DesktopShell>
         </ProfileProvider>
       </body>
     </html>
