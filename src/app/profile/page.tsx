@@ -212,7 +212,7 @@ export default function ProfilePage() {
     setEditingProfile(true);
   };
 
-  const saveProfile = () => {
+  const saveProfileEdits = () => {
     setProfile({
       name: nameDraft, username: usernameDraft,
       avatarEmoji: emojiDraft, avatarColor: colorDraft,
@@ -220,6 +220,8 @@ export default function ProfilePage() {
       avatarPhoto: avatarPhotoDraft,
     });
     setEditingProfile(false);
+    // Persist to Supabase
+    setTimeout(() => saveProfile(), 100);
   };
 
   const Avatar = ({ size, fontSize }: { size: string; fontSize: string }) => {
@@ -702,7 +704,7 @@ export default function ProfilePage() {
 
             <div className="flex gap-3">
               <button onClick={() => setEditingProfile(false)} className="flex-1 py-3 rounded-xl border border-soft-lavender text-[13px] font-semibold text-soft-muted hover:bg-soft-lavender-bg transition-colors">Cancel</button>
-              <button onClick={saveProfile} className="flex-1 py-3 rounded-xl bg-soft-purple text-white text-[13px] font-semibold hover:bg-soft-purple-dark transition-colors">Save</button>
+              <button onClick={saveProfileEdits} className="flex-1 py-3 rounded-xl bg-soft-purple text-white text-[13px] font-semibold hover:bg-soft-purple-dark transition-colors">Save</button>
             </div>
           </div>
         </div>
