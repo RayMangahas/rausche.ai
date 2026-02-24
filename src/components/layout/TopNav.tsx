@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useProfile } from "@/lib/ProfileContext";
+import { useAuth } from "@/lib/AuthContext";
 
 export default function TopNav({
   onToggleFriends,
@@ -13,7 +14,21 @@ export default function TopNav({
   friendsOpen: boolean;
 }) {
   const [searchFocused, setSearchFocused] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const { profile } = useProfile();
+  const { user, signOut } = useAuth();
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  // Close menu on outside click
+  useEffect(() => {
+    const handleClick = (e: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setMenuOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, []);
 
   return (
     <header className="bg-white border-b border-soft-lavender-border sticky top-0 z-50 px-6 py-2.5">
@@ -93,21 +108,74 @@ export default function TopNav({
             <span>Friends</span>
           </button>
 
-          {/* Profile Avatar - dynamic from profile context */}
-          <Link href="/profile" className="flex-shrink-0 no-underline">
-            <div
-              className="w-9 h-9 rounded-full flex items-center justify-center overflow-hidden hover:shadow-md transition-shadow cursor-pointer"
-              style={{ background: `linear-gradient(135deg, ${profile.avatarColor}, ${profile.avatarColor}88)` }}
+          {/* Profile Avatar with Dropdown */}
+          <div className="relative" ref={menuRef}>
+            <button
+              onClick={() => setMenuOpen(!menuOpen)}
+              className="flex-shrink-0 border-none bg-transparent p-0 cursor-pointer"
             >
-              {profile.avatarType === "photo" && profile.avatarPhoto ? (
-                <img src={profile.avatarPhoto} alt="Profile" className="w-full h-full object-cover" />
-              ) : profile.avatarType === "text" && profile.avatarText ? (
-                <span className="text-xs font-bold text-white font-display">{profile.avatarText}</span>
-              ) : (
-                <span className="text-lg">{profile.avatarEmoji}</span>
-              )}
-            </div>
-          </Link>
+              <div
+                className="w-9 h-9 rounded-full flex items-center justify-center overflow-hidden hover:shadow-md transition-shadow"
+                style={{ background: user ? `linear-gradient(135deg, ${profile.avatarColor}, ${profile.avatarColor}88)` : "linear-gradient(135deg, #B0A6CC, #B0A6CC88)" }}
+              >
+                {user ? (
+                  profile.avatarType === "photo" && profile.avatarPhoto ? (
+                    <img src={profile.avatarPhoto} alt="Profile" className="w-full h-full object-cover" />
+                  ) : profile.avatarType === "text" && profile.avatarText ? (
+                    <span className="text-xs font-bold text-white font-display">{profile.avatarText}</span>
+                  ) : (
+                    <span className="text-lg">{profile.avatarEmoji}</span>
+                  )
+                ) : (
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
+                    <circle cx="12" cy="7" r="4" />
+                  </svg>
+                )}
+              </div>
+            </button>
+
+            {/* Dropdown Menu */}
+            {menuOpen && (
+              <div className="absolute right-0 top-12 w-48 bg-white rounded-2xl shadow-xl shadow-purple-900/10 border border-[#E8E0F0] py-2 z-50">
+                {user ? (
+                  <>
+                    <Link
+                      href="/profile"
+                      onClick={() => setMenuOpen(false)}
+                      className="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-[#4A3070] hover:bg-[#F8F5FC] transition-colors no-underline"
+                    >
+                      <span>👤</span> My Profile
+                    </Link>
+                    <div className="border-t border-[#E8E0F0] my-1" />
+                    <button
+                      onClick={() => { setMenuOpen(false); signOut(); }}
+                      className="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-red-500 hover:bg-red-50 transition-colors w-full border-none bg-transparent cursor-pointer text-left"
+                    >
+                      <span>🚪</span> Sign Out
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <Link
+                      href="/login"
+                      onClick={() => setMenuOpen(false)}
+                      className="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-[#4A3070] hover:bg-[#F8F5FC] transition-colors no-underline"
+                    >
+                      <span>🔑</span> Log In
+                    </Link>
+                    <Link
+                      href="/signup"
+                      onClick={() => setMenuOpen(false)}
+                      className="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-[#4A3070] hover:bg-[#F8F5FC] transition-colors no-underline"
+                    >
+                      <span>✨</span> Sign Up
+                    </Link>
+                  </>
+                )}
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </header>

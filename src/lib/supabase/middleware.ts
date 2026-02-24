@@ -26,22 +26,15 @@ export async function updateSession(request: NextRequest) {
   );
 
   // Refresh the session - IMPORTANT: don't remove this
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  await supabase.auth.getUser();
 
-  // If not logged in and not on auth pages, redirect to login
+  // If logged in and on auth pages, redirect to home
   const isAuthPage =
     request.nextUrl.pathname.startsWith("/login") ||
     request.nextUrl.pathname.startsWith("/signup");
 
-  if (!user && !isAuthPage) {
-    const url = request.nextUrl.clone();
-    url.pathname = "/login";
-    return NextResponse.redirect(url);
-  }
+  const { data: { user } } = await supabase.auth.getUser();
 
-  // If logged in and on auth pages, redirect to home
   if (user && isAuthPage) {
     const url = request.nextUrl.clone();
     url.pathname = "/";
