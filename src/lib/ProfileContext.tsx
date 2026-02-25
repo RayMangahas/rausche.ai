@@ -72,6 +72,7 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
           if (error.code === "PGRST116") {
             await supabase.from("profiles").insert({
               id: user.id,
+              email: user.email || "",
               display_name: user.user_metadata?.full_name || "",
               username: user.email?.split("@")[0] || "",
               avatar_emoji: "😊",
@@ -136,6 +137,7 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
     try {
       const { error } = await supabase.from("profiles").upsert({
         id: user.id,
+        email: user.email || "",
         display_name: p.name,
         username: p.username,
         avatar_emoji: p.avatarEmoji,
