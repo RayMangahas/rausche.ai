@@ -1,50 +1,16 @@
-// ─── Rausche Ai Icons ─────────────────────────────────────────────
-// All icons as React components for the Rausche Ai app
-
 interface IconProps {
   size?: number;
   color?: string;
   active?: boolean;
 }
 
-// ─── Logo ────────────────────────────────────────────────────────
-
 export function RauscheLogo({ size = 32 }: { size?: number }) {
-  return (
-    <svg width={size} height={size * 0.72} viewBox="0 0 100 72" fill="none">
-      {/* Outer gold cloud */}
-      <path
-        d="M50 8C30 8 18 18 14 28C6 30 0 38 0 48C0 58 8 66 18 66H82C92 66 100 58 100 48C100 38 94 30 86 28C82 18 70 8 50 8Z"
-        fill="#F5D580"
-      />
-      {/* Inner purple cloud */}
-      <path
-        d="M50 14C33 14 23 22 20 30C13 32 8 38 8 46C8 54 14 60 22 60H78C86 60 92 54 92 46C92 38 87 32 80 30C77 22 67 14 50 14Z"
-        fill="#C9A0DC"
-      />
-      {/* White interior */}
-      <path
-        d="M50 20C36 20 28 26 25 33C19 35 15 40 15 46C15 52 20 56 26 56H74C80 56 85 52 85 46C85 40 81 35 75 33C72 26 64 20 50 20Z"
-        fill="white"
-      />
-      {/* House */}
-      <path d="M52 30L62 38V52H56V44H48V52H42V38L52 30Z" stroke="#C9A0DC" strokeWidth="2.5" fill="none" />
-      {/* Window */}
-      <rect x="50" y="34" width="4" height="4" fill="#C9A0DC" rx="0.5" />
-      {/* Tree */}
-      <polygon points="36,48 30,48 33,43 31,43 33,39 31,39 33,34" fill="#F5D580" />
-      <rect x="32" y="48" width="2" height="4" fill="#C9A0DC" />
-      {/* Sun */}
-      <circle cx="58" cy="28" r="4" fill="#F5D580" />
-    </svg>
-  );
+  return null; // Using PNG logo now
 }
-
-// ─── Navigation Icons ────────────────────────────────────────────
 
 export function SearchIcon({ size = 22 }: IconProps) {
   return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="#9B8EC2" strokeWidth="2" strokeLinecap="round">
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="#666" strokeWidth="2" strokeLinecap="round">
       <circle cx="11" cy="11" r="8" />
       <path d="M21 21l-4.35-4.35" />
     </svg>
@@ -52,7 +18,7 @@ export function SearchIcon({ size = 22 }: IconProps) {
 }
 
 export function MarketplaceIcon({ active }: IconProps) {
-  const color = active ? "#9B6BC2" : "#A0A0A8";
+  const color = active ? "#E88B3E" : "#666";
   return (
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
       <path d="M3 9h18l-1.5-4.5A1 1 0 0018.55 4H5.45a1 1 0 00-.95.5L3 9z" />
@@ -63,7 +29,7 @@ export function MarketplaceIcon({ active }: IconProps) {
 }
 
 export function CommunityIcon({ active }: IconProps) {
-  const color = active ? "#9B6BC2" : "#A0A0A8";
+  const color = active ? "#E88B3E" : "#666";
   return (
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
       <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
@@ -75,7 +41,7 @@ export function CommunityIcon({ active }: IconProps) {
 }
 
 export function FolderIcon({ active }: IconProps) {
-  const color = active ? "#9B6BC2" : "#A0A0A8";
+  const color = active ? "#E88B3E" : "#666";
   return (
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
       <path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z" />
@@ -84,7 +50,7 @@ export function FolderIcon({ active }: IconProps) {
 }
 
 export function ProfileIcon({ active }: IconProps) {
-  const color = active ? "#9B6BC2" : "#A0A0A8";
+  const color = active ? "#E88B3E" : "#666";
   return (
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
       <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
@@ -92,8 +58,6 @@ export function ProfileIcon({ active }: IconProps) {
     </svg>
   );
 }
-
-// ─── Action Icons ────────────────────────────────────────────────
 
 export function PhoneIcon({ size = 14 }: IconProps) {
   return (

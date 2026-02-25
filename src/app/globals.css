@@ -3,19 +3,45 @@
 @import "tailwindcss";
 
 @theme {
-  --color-soft-purple: #9B6BC2;
-  --color-soft-purple-dark: #7B4FA2;
-  --color-soft-purple-deep: #4A3070;
-  --color-soft-purple-deeper: #2D2254;
-  --color-soft-lavender: #C9A0DC;
-  --color-soft-lavender-light: #E8DCF4;
-  --color-soft-lavender-bg: #F8F4FC;
-  --color-soft-lavender-border: #EDE8F4;
-  --color-soft-gold: #F5D580;
-  --color-soft-gold-warm: #D6A87F;
-  --color-soft-muted: #8B7FAE;
-  --color-soft-muted-light: #B0A6CC;
-  --color-soft-text-secondary: #9B8EC2;
+  /* Primary orange accent (from logo) */
+  --color-r-orange: #E88B3E;
+  --color-r-orange-light: #F5A623;
+  --color-r-orange-dark: #CC5C3F;
+  --color-r-orange-deep: #9B5C3A;
+  --color-r-amber: #D4924A;
+  --color-r-copper: #B86E3A;
+
+  /* Dark surfaces */
+  --color-r-black: #000000;
+  --color-r-surface: #0A0A0A;
+  --color-r-card: #111111;
+  --color-r-card-hover: #181818;
+  --color-r-elevated: #1A1A1A;
+
+  /* Borders */
+  --color-r-border: #1E1E1E;
+  --color-r-border-light: #2A2A2A;
+
+  /* Text */
+  --color-r-text: #F0F0F0;
+  --color-r-text-secondary: #999999;
+  --color-r-text-muted: #666666;
+  --color-r-text-dim: #444444;
+
+  /* Legacy compat */
+  --color-soft-purple: #E88B3E;
+  --color-soft-purple-dark: #CC5C3F;
+  --color-soft-purple-deep: #F0F0F0;
+  --color-soft-purple-deeper: #F0F0F0;
+  --color-soft-lavender: #2A2A2A;
+  --color-soft-lavender-light: #1E1E1E;
+  --color-soft-lavender-bg: #111111;
+  --color-soft-lavender-border: #1E1E1E;
+  --color-soft-gold: #F5A623;
+  --color-soft-gold-warm: #D4924A;
+  --color-soft-muted: #999999;
+  --color-soft-muted-light: #666666;
+  --color-soft-text-secondary: #888888;
   --color-soft-online: #4CAF50;
 
   --font-display: "Quicksand", sans-serif;
@@ -26,96 +52,50 @@
   --radius-softest: 24px;
 }
 
-/* ─── Base ────────────────────────────────────────────────────── */
-
 body {
-  background: #F0ECF6;
+  background: #000000;
+  color: #F0F0F0;
   margin: 0;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* ─── Scrollbar Hide ──────────────────────────────────────────── */
-
 .scrollbar-hide {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
-
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
 }
 
-/* ─── Animations ──────────────────────────────────────────────── */
-
 @keyframes slideUp {
-  from {
-    transform: translateY(100%);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
+  from { transform: translateY(100%); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
 }
-
 @keyframes slideInRight {
-  from {
-    transform: translateX(100%);
-  }
-  to {
-    transform: translateX(0);
-  }
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
 }
-
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
 }
-
 @keyframes fadeUp {
-  from {
-    opacity: 0;
-    transform: translateY(12px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
 }
-
 @keyframes pulse-online {
-  0%, 100% {
-    box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.4);
-  }
-  50% {
-    box-shadow: 0 0 0 6px rgba(76, 175, 80, 0);
-  }
+  0%, 100% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.4); }
+  50% { box-shadow: 0 0 0 6px rgba(76, 175, 80, 0); }
 }
 
-.animate-slideUp {
-  animation: slideUp 0.3s ease-out;
-}
-
-.animate-slideInRight {
-  animation: slideInRight 0.25s ease-out;
-}
-
-.animate-fadeIn {
-  animation: fadeIn 0.2s ease-out;
-}
-
-.animate-fadeUp {
-  animation: fadeUp 0.35s ease-out;
-}
-
-.animate-pulse-online {
-  animation: pulse-online 2s ease-in-out infinite;
-}
-
-/* ─── Selection ───────────────────────────────────────────────── */
+.animate-slideUp { animation: slideUp 0.3s ease-out; }
+.animate-slideInRight { animation: slideInRight 0.25s ease-out; }
+.animate-fadeIn { animation: fadeIn 0.2s ease-out; }
+.animate-fadeUp { animation: fadeUp 0.35s ease-out; }
+.animate-pulse-online { animation: pulse-online 2s ease-in-out infinite; }
 
 ::selection {
-  background: #C9A0DC40;
-  color: #2D2254;
+  background: #E88B3E40;
+  color: #FFFFFF;
 }
