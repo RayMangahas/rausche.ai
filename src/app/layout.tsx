@@ -20,7 +20,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="font-body bg-[#F0ECF6]">
+      <body className="font-body">
         <AuthProvider>
           <ProfileProvider>
             <DesktopShell>{children}</DesktopShell>

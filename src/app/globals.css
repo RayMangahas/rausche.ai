@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&family=Quicksand:wght@500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@100;200;300;400;500;600;700&display=swap');
 
 @import "tailwindcss";
 
@@ -44,8 +44,8 @@
   --color-soft-text-secondary: #888888;
   --color-soft-online: #4CAF50;
 
-  --font-display: "Quicksand", sans-serif;
-  --font-body: "Nunito", "DM Sans", -apple-system, sans-serif;
+  --font-display: "Sora", sans-serif;
+  --font-body: "Sora", -apple-system, sans-serif;
 
   --radius-soft: 16px;
   --radius-softer: 18px;
@@ -56,6 +56,8 @@ body {
   background: #000000;
   color: #F0F0F0;
   margin: 0;
+  font-family: "Sora", sans-serif;
+  font-weight: 200;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
