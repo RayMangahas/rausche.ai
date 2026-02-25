@@ -30,7 +30,7 @@ const POPULAR_EMOJIS = [
   "🤩", "😌", "🫠", "🙃", "😤", "🫡", "🤭", "🥶", "🤯", "😈",
   "👻", "🤖", "👽", "💀", "🎃", "🥺", "😭", "🫶", "✌️", "🤙",
   "🌙", "🌸", "🔥", "⭐", "🎵", "🎮", "📚", "🎨", "🐱", "🐶",
-  "🦋", "🌊", "☕", "🍕", "🏀", "🎧", "💜", "✨", "🌈", "🍀",
+  "🦋", "🌊", "☕", "🍕", "🏀", "🎧", "🧡", "✨", "🌈", "🍀",
   "🧠", "💡", "🎯", "🏔️", "🌻", "🍂", "🎭", "🪐", "🦊", "🐻",
   "🐼", "🦄", "🌮", "🍣", "🎸", "🎹", "🏄", "🧘", "🚀", "💎",
   "🌺", "🍄", "🦩", "🐝", "🦈", "🐙", "🦕", "🐢", "🦜", "🐸",
@@ -260,27 +260,27 @@ export default function ProfilePage() {
         <div className="flex items-center gap-4 mb-3">
           <Avatar size="w-16 h-16" fontSize="text-3xl" />
           <div className="flex-1">
-            <h1 className="font-display font-bold text-xl text-soft-purple-deeper">{profile.name}</h1>
-            <p className="text-soft-muted text-sm font-medium">@{profile.username}</p>
+            <h1 className="font-display font-bold text-xl text-white">{profile.name}</h1>
+            <p className="text-[#C0C0C0] text-sm font-medium">@{profile.username}</p>
           </div>
         </div>
-        <button onClick={openEditProfile} className="w-full py-2 rounded-xl border text-[13px] font-semibold text-soft-purple bg-white/80 hover:bg-white transition-colors cursor-pointer" style={{ borderColor: `${profile.avatarColor}40` }}>
+        <button onClick={openEditProfile} className="w-full py-2 rounded-xl border text-[13px] font-semibold text-[#E88B3E] bg-[#111111]/80 hover:bg-[#111111] transition-colors cursor-pointer" style={{ borderColor: `${profile.avatarColor}40` }}>
           Edit Profile
         </button>
       </div>
 
       {/* ─── Echoes (24h stories) ─── */}
-      <div className="bg-white rounded-softer border border-soft-lavender-border p-5 mb-5">
+      <div className="bg-[#111111] rounded-softer border border-[#1E1E1E] p-5 mb-5">
         <div className="flex items-center justify-between mb-4">
           <div>
-            <h2 className="font-display font-bold text-[15px] text-soft-purple-deeper flex items-center gap-2">
+            <h2 className="font-display font-bold text-[15px] text-white flex items-center gap-2">
               🔊 My Echoes
             </h2>
-            <p className="text-[11px] text-soft-muted font-medium mt-0.5">Voice or text · fades in 24h</p>
+            <p className="text-[11px] text-[#C0C0C0] font-medium mt-0.5">Voice or text · fades in 24h</p>
           </div>
           <button
             onClick={() => { setShowEchoComposer(true); setEchoType("text"); setEchoTextDraft(""); setRecordedAudioUrl(null); }}
-            className="px-3.5 py-1.5 rounded-full bg-soft-purple text-white text-[12px] font-semibold hover:bg-soft-purple-dark transition-colors"
+            className="px-3.5 py-1.5 rounded-full bg-[#E88B3E] text-white text-[12px] font-semibold hover:bg-[#CC5C3F] transition-colors"
           >
             + New Echo
           </button>
@@ -292,18 +292,18 @@ export default function ProfilePage() {
               <button
                 key={echo.id}
                 onClick={() => setViewingEcho(echo)}
-                className="flex-shrink-0 w-[140px] h-[130px] rounded-2xl p-3 flex flex-col justify-between text-left cursor-pointer border border-soft-lavender-border hover:shadow-md transition-all relative overflow-hidden"
+                className="flex-shrink-0 w-[140px] h-[130px] rounded-2xl p-3 flex flex-col justify-between text-left cursor-pointer border border-[#1E1E1E] hover:shadow-md transition-all relative overflow-hidden"
                 style={{ background: echo.type === "voice" ? `linear-gradient(135deg, ${profile.avatarColor}22, ${profile.avatarColor}08)` : "white" }}
               >
                 <div>
                   <span className="text-sm">{echo.type === "voice" ? "🎙️" : "💬"}</span>
-                  <p className="text-[11.5px] font-medium text-soft-purple-deeper mt-1.5 line-clamp-3 leading-snug">
+                  <p className="text-[11.5px] font-medium text-white mt-1.5 line-clamp-3 leading-snug">
                     {echo.content}
                   </p>
                 </div>
                 <div className="flex items-center gap-1">
-                  <div className="w-1.5 h-1.5 rounded-full bg-soft-lavender animate-pulse" />
-                  <p className="text-[9px] text-soft-muted font-medium">{timeRemaining(echo.createdAt)}</p>
+                  <div className="w-1.5 h-1.5 rounded-full bg-[#2A2A2A] animate-pulse" />
+                  <p className="text-[9px] text-[#C0C0C0] font-medium">{timeRemaining(echo.createdAt)}</p>
                 </div>
               </button>
             ))}
@@ -311,30 +311,30 @@ export default function ProfilePage() {
         ) : (
           <div className="text-center py-6">
             <p className="text-3xl mb-2">🔊</p>
-            <p className="text-[13px] text-soft-muted font-medium">No echoes yet</p>
-            <p className="text-[11px] text-soft-muted-light mt-1">Share a voice or text echo — it disappears in 24h</p>
+            <p className="text-[13px] text-[#C0C0C0] font-medium">No echoes yet</p>
+            <p className="text-[11px] text-[#A0A0A0] mt-1">Share a voice or text echo — it disappears in 24h</p>
           </div>
         )}
       </div>
 
       {/* Echo Composer Modal */}
       {showEchoComposer && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center px-5" style={{ background: "rgba(45, 34, 84, 0.6)", backdropFilter: "blur(8px)" }} onClick={() => { setShowEchoComposer(false); if (isRecording) stopRecording(); }}>
-          <div onClick={(e) => e.stopPropagation()} className="bg-white w-full max-w-[400px] px-5 pt-6 pb-7" style={{ borderRadius: "24px" }}>
-            <h2 className="font-display font-bold text-lg text-soft-purple-deeper mb-1">New Echo</h2>
-            <p className="text-[12px] text-soft-muted font-medium mb-5">Disappears in 24 hours</p>
+        <div className="fixed inset-0 z-[100] flex items-center justify-center px-5" style={{ background: "rgba(0, 0, 0, 0.8)", backdropFilter: "blur(8px)" }} onClick={() => { setShowEchoComposer(false); if (isRecording) stopRecording(); }}>
+          <div onClick={(e) => e.stopPropagation()} className="bg-[#111111] w-full max-w-[400px] px-5 pt-6 pb-7" style={{ borderRadius: "24px" }}>
+            <h2 className="font-display font-bold text-lg text-white mb-1">New Echo</h2>
+            <p className="text-[12px] text-[#C0C0C0] font-medium mb-5">Disappears in 24 hours</p>
 
             {/* Type toggle */}
-            <div className="flex gap-1.5 mb-5 bg-soft-lavender-bg rounded-xl p-1">
+            <div className="flex gap-1.5 mb-5 bg-[#1A1A1A] rounded-xl p-1">
               <button
                 onClick={() => { setEchoType("text"); if (isRecording) stopRecording(); }}
-                className={`flex-1 py-2.5 rounded-lg text-[12px] font-semibold transition-all flex items-center justify-center gap-2 ${echoType === "text" ? "bg-white text-soft-purple shadow-sm" : "text-soft-muted hover:text-soft-purple-deep"}`}
+                className={`flex-1 py-2.5 rounded-lg text-[12px] font-semibold transition-all flex items-center justify-center gap-2 ${echoType === "text" ? "bg-[#1A1A1A] text-[#E88B3E] shadow-sm" : "text-[#C0C0C0] hover:text-[#E0E0E0]"}`}
               >
                 💬 Text
               </button>
               <button
                 onClick={() => setEchoType("voice")}
-                className={`flex-1 py-2.5 rounded-lg text-[12px] font-semibold transition-all flex items-center justify-center gap-2 ${echoType === "voice" ? "bg-white text-soft-purple shadow-sm" : "text-soft-muted hover:text-soft-purple-deep"}`}
+                className={`flex-1 py-2.5 rounded-lg text-[12px] font-semibold transition-all flex items-center justify-center gap-2 ${echoType === "voice" ? "bg-[#1A1A1A] text-[#E88B3E] shadow-sm" : "text-[#C0C0C0] hover:text-[#E0E0E0]"}`}
               >
                 🎙️ Voice
               </button>
@@ -348,9 +348,9 @@ export default function ProfilePage() {
                   onChange={(e) => { if (e.target.value.length <= 280) setEchoTextDraft(e.target.value); }}
                   autoFocus
                   placeholder="What's on your mind right now?"
-                  className="w-full bg-soft-lavender-bg rounded-xl px-4 py-3.5 text-[14px] text-soft-purple-deeper leading-relaxed font-medium border border-soft-lavender-border outline-none resize-none min-h-[120px] focus:ring-2 focus:ring-soft-purple/20"
+                  className="w-full bg-[#1A1A1A] rounded-xl px-4 py-3.5 text-[14px] text-white leading-relaxed font-medium border border-[#1E1E1E] outline-none resize-none min-h-[120px] focus:ring-2 focus:ring-[#E88B3E]/20"
                 />
-                <p className="text-[10px] text-soft-muted-light mt-1.5 text-right">{echoTextDraft.length} / 280</p>
+                <p className="text-[10px] text-[#A0A0A0] mt-1.5 text-right">{echoTextDraft.length} / 280</p>
               </div>
             )}
 
@@ -363,29 +363,29 @@ export default function ProfilePage() {
                       onClick={isRecording ? stopRecording : startRecording}
                       className={`w-20 h-20 rounded-full flex items-center justify-center text-3xl mx-auto transition-all ${
                         isRecording
-                          ? "bg-red-500 text-white animate-pulse shadow-lg shadow-red-500/30"
-                          : "bg-soft-lavender-bg text-soft-purple hover:bg-soft-lavender-light hover:shadow-md"
+                          ? "bg-red-500 text-white animate-pulse shadow-lg shadow-red-500/20"
+                          : "bg-[#1A1A1A] text-[#E88B3E] hover:bg-[#2A2A2A] hover:shadow-md"
                       }`}
                     >
                       {isRecording ? "⏹" : "🎙️"}
                     </button>
-                    <p className="text-[13px] text-soft-purple-deeper font-semibold mt-3">
+                    <p className="text-[13px] text-white font-semibold mt-3">
                       {isRecording ? `Recording... ${Math.floor(recordingTime / 60)}:${(recordingTime % 60).toString().padStart(2, "0")}` : "Tap to record"}
                     </p>
-                    <p className="text-[11px] text-soft-muted mt-1">
+                    <p className="text-[11px] text-[#C0C0C0] mt-1">
                       {isRecording ? "Tap again to stop" : "Up to 60 seconds"}
                     </p>
                   </>
                 ) : (
                   <>
-                    <div className="bg-soft-lavender-bg rounded-2xl p-4 mb-3">
+                    <div className="bg-[#1A1A1A] rounded-2xl p-4 mb-3">
                       <p className="text-sm mb-2">🎙️ Voice echo ready</p>
                       <audio src={recordedAudioUrl} controls className="w-full" />
-                      <p className="text-[11px] text-soft-muted mt-2">{Math.floor(recordingTime / 60)}:{(recordingTime % 60).toString().padStart(2, "0")} recorded</p>
+                      <p className="text-[11px] text-[#C0C0C0] mt-2">{Math.floor(recordingTime / 60)}:{(recordingTime % 60).toString().padStart(2, "0")} recorded</p>
                     </div>
                     <button
                       onClick={() => { setRecordedAudioUrl(null); setRecordingTime(0); }}
-                      className="text-[12px] text-soft-muted font-semibold hover:text-red-500 transition-colors"
+                      className="text-[12px] text-[#C0C0C0] font-semibold hover:text-red-500 transition-colors"
                     >
                       🗑️ Discard & re-record
                     </button>
@@ -398,7 +398,7 @@ export default function ProfilePage() {
             <div className="flex gap-3 mt-5">
               <button
                 onClick={() => { setShowEchoComposer(false); if (isRecording) stopRecording(); }}
-                className="flex-1 py-3 rounded-xl border border-soft-lavender text-[13px] font-semibold text-soft-muted hover:bg-soft-lavender-bg transition-colors"
+                className="flex-1 py-3 rounded-xl border border-[#2A2A2A] text-[13px] font-semibold text-[#C0C0C0] hover:bg-[#1A1A1A] transition-colors"
               >
                 Cancel
               </button>
@@ -407,8 +407,8 @@ export default function ProfilePage() {
                 disabled={(echoType === "text" && !echoTextDraft.trim()) || (echoType === "voice" && !recordedAudioUrl)}
                 className={`flex-1 py-3 rounded-xl text-[13px] font-semibold transition-colors ${
                   (echoType === "text" && echoTextDraft.trim()) || (echoType === "voice" && recordedAudioUrl)
-                    ? "bg-soft-purple text-white hover:bg-soft-purple-dark"
-                    : "bg-soft-lavender-light text-soft-muted-light cursor-not-allowed"
+                    ? "bg-[#E88B3E] text-white hover:bg-[#CC5C3F]"
+                    : "bg-[#2A2A2A] text-[#A0A0A0] cursor-not-allowed"
                 }`}
               >
                 Post Echo
@@ -420,11 +420,11 @@ export default function ProfilePage() {
 
       {/* Echo Viewer Modal */}
       {viewingEcho && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center px-5" style={{ background: "rgba(45, 34, 84, 0.85)", backdropFilter: "blur(12px)" }} onClick={() => setViewingEcho(null)}>
+        <div className="fixed inset-0 z-[100] flex items-center justify-center px-5" style={{ background: "rgba(0, 0, 0, 0.9)", backdropFilter: "blur(12px)" }} onClick={() => setViewingEcho(null)}>
           <div onClick={(e) => e.stopPropagation()} className="w-full max-w-[380px] text-center">
             {/* Progress bar */}
-            <div className="w-full bg-white/20 rounded-full h-1 mb-6">
-              <div className="bg-white rounded-full h-1" style={{ width: `${Math.max(0, 100 - ((Date.now() - viewingEcho.createdAt) / (24 * 60 * 60 * 1000)) * 100)}%` }} />
+            <div className="w-full bg-[#111111]/20 rounded-full h-1 mb-6">
+              <div className="bg-[#111111] rounded-full h-1" style={{ width: `${Math.max(0, 100 - ((Date.now() - viewingEcho.createdAt) / (24 * 60 * 60 * 1000)) * 100)}%` }} />
             </div>
 
             {/* User info */}
@@ -444,7 +444,7 @@ export default function ProfilePage() {
             </div>
 
             {/* Echo content */}
-            <div className="bg-white/10 rounded-3xl p-8 backdrop-blur-sm">
+            <div className="bg-[#111111]/10 rounded-3xl p-8 backdrop-blur-sm">
               {viewingEcho.type === "text" ? (
                 <p className="text-white text-lg font-medium leading-relaxed">{viewingEcho.content}</p>
               ) : (
@@ -467,46 +467,46 @@ export default function ProfilePage() {
       {/* Stats */}
       <div className="grid grid-cols-4 gap-2.5 mb-5">
         {[{ label: "Following", value: "12" }, { label: "Followers", value: "34" }, { label: "Circles", value: "3" }, { label: "Communities", value: "5" }].map((stat) => (
-          <div key={stat.label} className="bg-white rounded-soft border border-soft-lavender-border p-4 text-center">
-            <p className="font-bold text-xl text-soft-purple-deeper">{stat.value}</p>
-            <p className="text-[11px] text-soft-muted font-medium mt-0.5">{stat.label}</p>
+          <div key={stat.label} className="bg-[#111111] rounded-soft border border-[#1E1E1E] p-4 text-center">
+            <p className="font-bold text-xl text-white">{stat.value}</p>
+            <p className="text-[11px] text-[#C0C0C0] font-medium mt-0.5">{stat.label}</p>
           </div>
         ))}
       </div>
 
       {/* Three Questions */}
-      <div className="bg-white rounded-softer border border-soft-lavender-border p-5 mb-3">
+      <div className="bg-[#111111] rounded-softer border border-[#1E1E1E] p-5 mb-3">
         <div className="flex items-center gap-3 mb-4">
           <div className="w-9 h-9 rounded-lg flex items-center justify-center text-lg overflow-hidden" style={{ background: `linear-gradient(135deg, ${profile.avatarColor}33, ${profile.avatarColor}18)` }}>
-            {profile.avatarType === "photo" && profile.avatarPhoto ? <img src={profile.avatarPhoto} alt="" className="w-full h-full object-cover" /> : profile.avatarType === "text" && profile.avatarText ? <span className="text-xs font-bold" style={{ color: profile.avatarColor }}>{profile.avatarText}</span> : profile.avatarEmoji}
+            {profile.avatarType === "photo" && profile.avatarPhoto ? <img src={profile.avatarPhoto} alt="" className="w-full h-full object-cover" /> : profile.avatarType === "text" && profile.avatarText ? <span className="text-xs font-bold" style={{ color: "#E88B3E" }}>{profile.avatarText}</span> : profile.avatarEmoji}
           </div>
-          <p className="text-[11px] text-soft-text-secondary font-semibold uppercase tracking-wider">Get to know me</p>
+          <p className="text-[11px] text-[#C0C0C0] font-semibold uppercase tracking-wider">Get to know me</p>
         </div>
 
         <div className="flex flex-col gap-5">
           {/* Q1 */}
           <div>
-            <p className="text-[13px] font-bold text-soft-purple-deep mb-1.5">When you&apos;re down, what usually cheers you up?</p>
+            <p className="text-[13px] font-bold text-[#E0E0E0] mb-1.5">When you&apos;re down, what usually cheers you up?</p>
             {editing === "q1" ? (
               <div>
-                <textarea value={q1Draft} onChange={(e) => handleQ1Change(e.target.value)} autoFocus placeholder="Type your answer..." className="w-full bg-soft-lavender-bg rounded-xl px-3.5 py-3 text-[13px] text-soft-purple-deeper leading-relaxed font-medium border-l-[3px] border-soft-lavender outline-none resize-none min-h-[80px] focus:ring-2 focus:ring-soft-purple/20" />
-                {q1MediaDraft && (<div className="relative"><MediaPreview media={q1MediaDraft} /><button onClick={() => setQ1MediaDraft(null)} className="absolute top-4 right-2 bg-black/50 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs">✕</button></div>)}
+                <textarea value={q1Draft} onChange={(e) => handleQ1Change(e.target.value)} autoFocus placeholder="Type your answer..." className="w-full bg-[#1A1A1A] rounded-xl px-3.5 py-3 text-[13px] text-white leading-relaxed font-medium border-l-[3px] border-[#E88B3E]/30 outline-none resize-none min-h-[80px] focus:ring-2 focus:ring-[#E88B3E]/20" />
+                {q1MediaDraft && (<div className="relative"><MediaPreview media={q1MediaDraft} /><button onClick={() => setQ1MediaDraft(null)} className="absolute top-4 right-2 bg-black/70 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs">✕</button></div>)}
                 <div className="flex items-center justify-between mt-1.5">
                   <div className="flex items-center gap-2">
-                    <p className="text-[10px] text-soft-muted-light">{wordCount(q1Draft)} / 200 words</p>
-                    <button onClick={() => q1FileRef.current?.click()} className="text-[11px] text-soft-purple font-semibold flex items-center gap-1 hover:text-soft-purple-dark transition-colors">📷 Add photo/video</button>
+                    <p className="text-[10px] text-[#A0A0A0]">{wordCount(q1Draft)} / 200 words</p>
+                    <button onClick={() => q1FileRef.current?.click()} className="text-[11px] text-[#E88B3E] font-semibold flex items-center gap-1 hover:text-[#CC5C3F] transition-colors">📷 Add photo/video</button>
                     <input ref={q1FileRef} type="file" accept="image/*,video/*" className="hidden" onChange={(e) => handleFileSelect(e, setQ1MediaDraft)} />
                   </div>
                   <div className="flex gap-2">
-                    <button onClick={handleCancel} className="text-[12px] text-soft-muted font-semibold px-3 py-1 rounded-lg hover:bg-soft-lavender-bg transition-colors">Cancel</button>
-                    <button onClick={handleSave} className="text-[12px] text-white font-semibold px-4 py-1 rounded-lg bg-soft-purple hover:bg-soft-purple-dark transition-colors">Save</button>
+                    <button onClick={handleCancel} className="text-[12px] text-[#C0C0C0] font-semibold px-3 py-1 rounded-lg hover:bg-[#1A1A1A] transition-colors">Cancel</button>
+                    <button onClick={handleSave} className="text-[12px] text-white font-semibold px-4 py-1 rounded-lg bg-[#E88B3E] hover:bg-[#CC5C3F] transition-colors">Save</button>
                   </div>
                 </div>
               </div>
             ) : (
               <div onClick={() => startEditing("q1")} className="cursor-pointer">
-                <div className="bg-soft-lavender-bg rounded-xl px-3.5 py-3 text-[13px] leading-relaxed font-medium border-l-[3px] border-soft-lavender hover:bg-soft-lavender-light transition-colors min-h-[44px]">
-                  {profile.q1 ? <span className="text-soft-purple-deeper">{profile.q1}</span> : <span className="text-soft-muted-light italic">Tap to answer...</span>}
+                <div className="bg-[#1A1A1A] rounded-xl px-3.5 py-3 text-[13px] leading-relaxed font-medium border-l-[3px] border-[#E88B3E]/30 hover:bg-[#2A2A2A] transition-colors min-h-[44px]">
+                  {profile.q1 ? <span className="text-white">{profile.q1}</span> : <span className="text-[#A0A0A0] italic">Tap to answer...</span>}
                 </div>
                 <MediaPreview media={q1Media} small />
               </div>
@@ -515,27 +515,27 @@ export default function ProfilePage() {
 
           {/* Q2 */}
           <div>
-            <p className="text-[13px] font-bold text-soft-purple-deep mb-1.5">What&apos;s a non-school topic you&apos;ve explored deeply just because you were curious?</p>
+            <p className="text-[13px] font-bold text-[#E0E0E0] mb-1.5">What&apos;s a non-school topic you&apos;ve explored deeply just because you were curious?</p>
             {editing === "q2" ? (
               <div>
-                <textarea value={q2Draft} onChange={(e) => handleQ2Change(e.target.value)} autoFocus placeholder="Type your answer..." className="w-full bg-soft-lavender-bg rounded-xl px-3.5 py-3 text-[13px] text-soft-purple-deeper leading-relaxed font-medium border-l-[3px] border-soft-lavender outline-none resize-none min-h-[80px] focus:ring-2 focus:ring-soft-purple/20" />
-                {q2MediaDraft && (<div className="relative"><MediaPreview media={q2MediaDraft} /><button onClick={() => setQ2MediaDraft(null)} className="absolute top-4 right-2 bg-black/50 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs">✕</button></div>)}
+                <textarea value={q2Draft} onChange={(e) => handleQ2Change(e.target.value)} autoFocus placeholder="Type your answer..." className="w-full bg-[#1A1A1A] rounded-xl px-3.5 py-3 text-[13px] text-white leading-relaxed font-medium border-l-[3px] border-[#E88B3E]/30 outline-none resize-none min-h-[80px] focus:ring-2 focus:ring-[#E88B3E]/20" />
+                {q2MediaDraft && (<div className="relative"><MediaPreview media={q2MediaDraft} /><button onClick={() => setQ2MediaDraft(null)} className="absolute top-4 right-2 bg-black/70 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs">✕</button></div>)}
                 <div className="flex items-center justify-between mt-1.5">
                   <div className="flex items-center gap-2">
-                    <p className="text-[10px] text-soft-muted-light">{wordCount(q2Draft)} / 200 words</p>
-                    <button onClick={() => q2FileRef.current?.click()} className="text-[11px] text-soft-purple font-semibold flex items-center gap-1 hover:text-soft-purple-dark transition-colors">📷 Add photo/video</button>
+                    <p className="text-[10px] text-[#A0A0A0]">{wordCount(q2Draft)} / 200 words</p>
+                    <button onClick={() => q2FileRef.current?.click()} className="text-[11px] text-[#E88B3E] font-semibold flex items-center gap-1 hover:text-[#CC5C3F] transition-colors">📷 Add photo/video</button>
                     <input ref={q2FileRef} type="file" accept="image/*,video/*" className="hidden" onChange={(e) => handleFileSelect(e, setQ2MediaDraft)} />
                   </div>
                   <div className="flex gap-2">
-                    <button onClick={handleCancel} className="text-[12px] text-soft-muted font-semibold px-3 py-1 rounded-lg hover:bg-soft-lavender-bg transition-colors">Cancel</button>
-                    <button onClick={handleSave} className="text-[12px] text-white font-semibold px-4 py-1 rounded-lg bg-soft-purple hover:bg-soft-purple-dark transition-colors">Save</button>
+                    <button onClick={handleCancel} className="text-[12px] text-[#C0C0C0] font-semibold px-3 py-1 rounded-lg hover:bg-[#1A1A1A] transition-colors">Cancel</button>
+                    <button onClick={handleSave} className="text-[12px] text-white font-semibold px-4 py-1 rounded-lg bg-[#E88B3E] hover:bg-[#CC5C3F] transition-colors">Save</button>
                   </div>
                 </div>
               </div>
             ) : (
               <div onClick={() => startEditing("q2")} className="cursor-pointer">
-                <div className="bg-soft-lavender-bg rounded-xl px-3.5 py-3 text-[13px] leading-relaxed font-medium border-l-[3px] border-soft-lavender hover:bg-soft-lavender-light transition-colors min-h-[44px]">
-                  {profile.q2 ? <span className="text-soft-purple-deeper">{profile.q2}</span> : <span className="text-soft-muted-light italic">Tap to answer...</span>}
+                <div className="bg-[#1A1A1A] rounded-xl px-3.5 py-3 text-[13px] leading-relaxed font-medium border-l-[3px] border-[#E88B3E]/30 hover:bg-[#2A2A2A] transition-colors min-h-[44px]">
+                  {profile.q2 ? <span className="text-white">{profile.q2}</span> : <span className="text-[#A0A0A0] italic">Tap to answer...</span>}
                 </div>
                 <MediaPreview media={q2Media} small />
               </div>
@@ -544,28 +544,28 @@ export default function ProfilePage() {
 
           {/* Q3 */}
           <div>
-            <p className="text-[13px] font-bold text-soft-purple-deep mb-1.5">What kind of person do you hope to become? Pick three qualities.</p>
+            <p className="text-[13px] font-bold text-[#E0E0E0] mb-1.5">What kind of person do you hope to become? Pick three qualities.</p>
             {editing === "q3" ? (
               <div>
                 <div className="flex flex-wrap gap-2">
                   {qualitiesDraft.map((q, i) => (
                     <div key={i} className="relative">
-                      <input type="text" value={q} onChange={(e) => handleQualityChange(i, e.target.value)} placeholder={`Quality ${i + 1}`} maxLength={20} className="bg-soft-lavender-bg rounded-full px-3.5 py-1.5 text-xs font-semibold text-soft-purple border border-soft-lavender outline-none w-[120px] text-center placeholder:text-soft-muted-light placeholder:font-medium focus:ring-2 focus:ring-soft-purple/20" />
-                      {q && <span className="absolute -top-1.5 -right-1.5 text-[8px] text-soft-muted-light bg-white rounded-full px-1">{q.length}/20</span>}
+                      <input type="text" value={q} onChange={(e) => handleQualityChange(i, e.target.value)} placeholder={`Quality ${i + 1}`} maxLength={20} className="bg-[#1A1A1A] rounded-full px-3.5 py-1.5 text-xs font-semibold text-[#E88B3E] border border-[#2A2A2A] outline-none w-[120px] text-center placeholder:text-[#A0A0A0] placeholder:font-medium focus:ring-2 focus:ring-[#E88B3E]/20" />
+                      {q && <span className="absolute -top-1.5 -right-1.5 text-[8px] text-[#A0A0A0] bg-[#111111] rounded-full px-1">{q.length}/20</span>}
                     </div>
                   ))}
                 </div>
                 <div className="flex justify-end gap-2 mt-2.5">
-                  <button onClick={handleCancel} className="text-[12px] text-soft-muted font-semibold px-3 py-1 rounded-lg hover:bg-soft-lavender-bg transition-colors">Cancel</button>
-                  <button onClick={handleSave} className="text-[12px] text-white font-semibold px-4 py-1 rounded-lg bg-soft-purple hover:bg-soft-purple-dark transition-colors">Save</button>
+                  <button onClick={handleCancel} className="text-[12px] text-[#C0C0C0] font-semibold px-3 py-1 rounded-lg hover:bg-[#1A1A1A] transition-colors">Cancel</button>
+                  <button onClick={handleSave} className="text-[12px] text-white font-semibold px-4 py-1 rounded-lg bg-[#E88B3E] hover:bg-[#CC5C3F] transition-colors">Save</button>
                 </div>
               </div>
             ) : (
               <div onClick={() => startEditing("q3")} className="cursor-pointer">
                 {profile.qualities.some((q) => q) ? (
-                  <div className="flex flex-wrap gap-2">{profile.qualities.filter((q) => q).map((q, i) => (<span key={i} className="bg-soft-lavender-bg rounded-full px-3.5 py-1.5 text-xs font-semibold text-soft-purple border border-soft-lavender">{q}</span>))}</div>
+                  <div className="flex flex-wrap gap-2">{profile.qualities.filter((q) => q).map((q, i) => (<span key={i} className="bg-[#1A1A1A] rounded-full px-3.5 py-1.5 text-xs font-semibold text-[#E88B3E] border border-[#2A2A2A]">{q}</span>))}</div>
                 ) : (
-                  <div className="bg-soft-lavender-bg rounded-xl px-3.5 py-3 text-[13px] leading-relaxed font-medium border-l-[3px] border-soft-lavender hover:bg-soft-lavender-light transition-colors min-h-[44px]"><span className="text-soft-muted-light italic">Tap to add qualities...</span></div>
+                  <div className="bg-[#1A1A1A] rounded-xl px-3.5 py-3 text-[13px] leading-relaxed font-medium border-l-[3px] border-[#E88B3E]/30 hover:bg-[#2A2A2A] transition-colors min-h-[44px]"><span className="text-[#A0A0A0] italic">Tap to add qualities...</span></div>
                 )}
               </div>
             )}
@@ -574,40 +574,40 @@ export default function ProfilePage() {
       </div>
 
       {/* Settings */}
-      <div className="bg-white rounded-softer border border-soft-lavender-border overflow-hidden">
+      <div className="bg-[#111111] rounded-softer border border-[#1E1E1E] overflow-hidden">
         {[{ label: "Edit Folder", icon: "📁" }, { label: "Notification Preferences", icon: "🔔" }, { label: "Privacy & Safety", icon: "🔒" }, { label: "Rausche+ Subscription", icon: "⭐" }, { label: "Help & Feedback", icon: "💬" }].map((item, i) => (
-          <div key={item.label} className={`flex items-center gap-3 px-4 py-3.5 cursor-pointer hover:bg-soft-lavender-bg transition-colors ${i < 4 ? "border-b border-soft-lavender-border" : ""}`}>
+          <div key={item.label} className={`flex items-center gap-3 px-4 py-3.5 cursor-pointer hover:bg-[#1A1A1A] transition-colors ${i < 4 ? "border-b border-[#1E1E1E]" : ""}`}>
             <span className="text-lg">{item.icon}</span>
-            <span className="text-sm font-semibold text-soft-purple-deeper flex-1">{item.label}</span>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#B0A6CC" strokeWidth="2" strokeLinecap="round"><path d="M9 18l6-6-6-6" /></svg>
+            <span className="text-sm font-semibold text-white flex-1">{item.label}</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#666666" strokeWidth="2" strokeLinecap="round"><path d="M9 18l6-6-6-6" /></svg>
           </div>
         ))}
       </div>
-      <p className="text-center text-[11px] text-soft-muted-light mt-6 mb-2">Rausche v0.1.0 · Made with 💜</p>
+      <p className="text-center text-[11px] text-[#A0A0A0] mt-6 mb-2">Rausche v0.1.0 · Made with 🧡</p>
 
       {/* Sign Out */}
       <button
         onClick={signOut}
-        className="w-full py-3 rounded-xl border border-red-200 text-red-500 text-sm font-semibold hover:bg-red-50 transition-colors cursor-pointer mb-6 bg-white"
+        className="w-full py-3 rounded-xl border border-red-800 text-red-500 text-sm font-semibold hover:bg-red-900/20 transition-colors cursor-pointer mb-6 bg-[#111111]"
       >
         Sign Out
       </button>
 
       {/* ────── Edit Profile Modal ────── */}
       {editingProfile && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center px-5" style={{ background: "rgba(45, 34, 84, 0.6)", backdropFilter: "blur(8px)" }} onClick={() => setEditingProfile(false)}>
-          <div onClick={(e) => e.stopPropagation()} className="bg-white w-full max-w-[380px] px-5 pt-6 pb-7 max-h-[85vh] overflow-y-auto" style={{ borderRadius: "24px" }}>
-            <h2 className="font-display font-bold text-lg text-soft-purple-deeper mb-5">Edit Profile</h2>
+        <div className="fixed inset-0 z-[100] flex items-center justify-center px-5" style={{ background: "rgba(0, 0, 0, 0.8)", backdropFilter: "blur(8px)" }} onClick={() => setEditingProfile(false)}>
+          <div onClick={(e) => e.stopPropagation()} className="bg-[#111111] w-full max-w-[380px] px-5 pt-6 pb-7 max-h-[85vh] overflow-y-auto" style={{ borderRadius: "24px" }}>
+            <h2 className="font-display font-bold text-lg text-white mb-5">Edit Profile</h2>
 
             <div className="flex justify-center mb-4">
               <AvatarPreview size="w-20 h-20" fontSize="text-4xl" />
             </div>
 
             {/* Tabs */}
-            <div className="flex gap-1.5 mb-4 bg-soft-lavender-bg rounded-xl p-1">
+            <div className="flex gap-1.5 mb-4 bg-[#1A1A1A] rounded-xl p-1">
               {[{ key: "emoji" as const, label: "Emoji" }, { key: "text" as const, label: "Letters" }, { key: "photo" as const, label: "Photo" }].map((tab) => (
                 <button key={tab.key} onClick={() => setAvatarTypeDraft(tab.key)}
-                  className={`flex-1 py-2 rounded-lg text-[12px] font-semibold transition-all ${avatarTypeDraft === tab.key ? "bg-white text-soft-purple shadow-sm" : "text-soft-muted hover:text-soft-purple-deep"}`}>
+                  className={`flex-1 py-2 rounded-lg text-[12px] font-semibold transition-all ${avatarTypeDraft === tab.key ? "bg-[#1A1A1A] text-[#E88B3E] shadow-sm" : "text-[#C0C0C0] hover:text-[#E0E0E0]"}`}>
                   {tab.label}
                 </button>
               ))}
@@ -621,17 +621,17 @@ export default function ProfilePage() {
                     <div className="grid grid-rows-3 grid-flow-col gap-1.5 w-max">
                       {POPULAR_EMOJIS.map((emoji) => (
                         <button key={emoji} onClick={() => { setEmojiDraft(emoji); setAvatarTypeDraft("emoji"); }}
-                          className={`w-10 h-10 rounded-lg text-xl flex items-center justify-center transition-all flex-shrink-0 ${emojiDraft === emoji && avatarTypeDraft === "emoji" ? "bg-soft-purple scale-110 shadow-md" : "bg-soft-lavender-bg hover:bg-soft-lavender-light"}`}>{emoji}</button>
+                          className={`w-10 h-10 rounded-lg text-xl flex items-center justify-center transition-all flex-shrink-0 ${emojiDraft === emoji && avatarTypeDraft === "emoji" ? "bg-[#E88B3E] scale-110 shadow-md" : "bg-[#1A1A1A] hover:bg-[#2A2A2A]"}`}>{emoji}</button>
                       ))}
                     </div>
                   </div>
-                  <p className="text-[10px] text-soft-muted-light mt-1">← Swipe for more →</p>
+                  <p className="text-[10px] text-[#A0A0A0] mt-1">← Swipe for more →</p>
                 </div>
                 <div className="mb-4">
-                  <label className="text-[11px] text-soft-text-secondary font-semibold uppercase tracking-wider block mb-1.5">Or type any emoji</label>
+                  <label className="text-[11px] text-[#C0C0C0] font-semibold uppercase tracking-wider block mb-1.5">Or type any emoji</label>
                   <div className="flex gap-2">
-                    <input type="text" value={customEmojiInput} onChange={(e) => setCustomEmojiInput(e.target.value)} placeholder="Paste or type an emoji..." className="flex-1 bg-soft-lavender-bg rounded-xl px-3 py-2.5 text-[14px] text-center border border-soft-lavender-border outline-none focus:ring-2 focus:ring-soft-purple/20" />
-                    <button onClick={handleCustomEmoji} className="bg-soft-purple text-white text-[12px] font-semibold px-4 rounded-xl hover:bg-soft-purple-dark transition-colors">Use</button>
+                    <input type="text" value={customEmojiInput} onChange={(e) => setCustomEmojiInput(e.target.value)} placeholder="Paste or type an emoji..." className="flex-1 bg-[#1A1A1A] rounded-xl px-3 py-2.5 text-[14px] text-center border border-[#1E1E1E] outline-none focus:ring-2 focus:ring-[#E88B3E]/20" />
+                    <button onClick={handleCustomEmoji} className="bg-[#E88B3E] text-white text-[12px] font-semibold px-4 rounded-xl hover:bg-[#CC5C3F] transition-colors">Use</button>
                   </div>
                 </div>
               </>
@@ -640,9 +640,9 @@ export default function ProfilePage() {
             {/* ── Text mode ── */}
             {avatarTypeDraft === "text" && (
               <div className="mb-4">
-                <label className="text-[11px] text-soft-text-secondary font-semibold uppercase tracking-wider block mb-1.5">Type up to 3 characters</label>
-                <input type="text" value={avatarTextDraft} onChange={(e) => { if (e.target.value.length <= 3) setAvatarTextDraft(e.target.value.toUpperCase()); }} placeholder="e.g. RAY" maxLength={3} className="w-full bg-soft-lavender-bg rounded-xl px-4 py-3 text-[20px] text-soft-purple-deeper font-bold text-center border border-soft-lavender-border outline-none focus:ring-2 focus:ring-soft-purple/20 font-display tracking-wider" />
-                <p className="text-[10px] text-soft-muted-light mt-1 text-center">{avatarTextDraft.length}/3 characters</p>
+                <label className="text-[11px] text-[#C0C0C0] font-semibold uppercase tracking-wider block mb-1.5">Type up to 3 characters</label>
+                <input type="text" value={avatarTextDraft} onChange={(e) => { if (e.target.value.length <= 3) setAvatarTextDraft(e.target.value.toUpperCase()); }} placeholder="e.g. RAY" maxLength={3} className="w-full bg-[#1A1A1A] rounded-xl px-4 py-3 text-[20px] text-white font-bold text-center border border-[#1E1E1E] outline-none focus:ring-2 focus:ring-[#E88B3E]/20 font-display tracking-wider" />
+                <p className="text-[10px] text-[#A0A0A0] mt-1 text-center">{avatarTextDraft.length}/3 characters</p>
               </div>
             )}
 
@@ -650,7 +650,7 @@ export default function ProfilePage() {
             {avatarTypeDraft === "photo" && (
               <div className="mb-4">
                 <button onClick={() => avatarPhotoRef.current?.click()}
-                  className="w-full py-3 rounded-xl border-2 border-dashed text-[13px] font-semibold transition-colors cursor-pointer flex items-center justify-center gap-2 border-soft-lavender text-soft-purple bg-soft-lavender-bg hover:bg-soft-lavender-light">
+                  className="w-full py-3 rounded-xl border-2 border-dashed text-[13px] font-semibold transition-colors cursor-pointer flex items-center justify-center gap-2 border-[#2A2A2A] text-[#E88B3E] bg-[#1A1A1A] hover:bg-[#2A2A2A]">
                   📷 Upload a photo
                 </button>
                 <input ref={avatarPhotoRef} type="file" accept="image/*" className="hidden" onChange={handleAvatarPhotoUpload} />
@@ -659,7 +659,7 @@ export default function ProfilePage() {
                 {avatarPhotoDraft && (
                   <div className="mt-2.5 relative">
                     <img src={avatarPhotoDraft} alt="Preview" className="w-full h-32 rounded-xl object-cover" />
-                    <button onClick={() => setAvatarPhotoDraft("")} className="absolute top-2 right-2 bg-black/50 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-black/70">✕</button>
+                    <button onClick={() => setAvatarPhotoDraft("")} className="absolute top-2 right-2 bg-black/70 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-black/70">✕</button>
                   </div>
                 )}
               </div>
@@ -667,13 +667,13 @@ export default function ProfilePage() {
 
             {/* Color picker */}
             <div className="mb-4">
-              <label className="text-[11px] text-soft-text-secondary font-semibold uppercase tracking-wider block mb-1.5">{avatarTypeDraft === "photo" ? "Profile accent color" : "Avatar color"}</label>
+              <label className="text-[11px] text-[#C0C0C0] font-semibold uppercase tracking-wider block mb-1.5">{avatarTypeDraft === "photo" ? "Profile accent color" : "Avatar color"}</label>
               <div className="flex flex-wrap gap-2 mb-2.5">
                 {PRESET_COLORS.map((color) => (
-                  <button key={color} onClick={() => setColorDraft(color)} className={`w-9 h-9 rounded-lg transition-all ${colorDraft === color ? "scale-110 shadow-md ring-2 ring-soft-purple ring-offset-2" : "hover:scale-105"}`} style={{ backgroundColor: color }} />
+                  <button key={color} onClick={() => setColorDraft(color)} className={`w-9 h-9 rounded-lg transition-all ${colorDraft === color ? "scale-110 shadow-md ring-2 ring-[#E88B3E] ring-offset-2" : "hover:scale-105"}`} style={{ backgroundColor: color }} />
                 ))}
                 <button onClick={() => colorPickerRef.current?.click()} className="w-9 h-9 rounded-lg transition-all hover:scale-105 flex items-center justify-center" style={{ background: "conic-gradient(from 0deg, #ff0000, #ffff00, #00ff00, #00ffff, #0000ff, #ff00ff, #ff0000)" }}>
-                  <span className="bg-white rounded-md px-0.5 text-[8px] font-bold text-soft-purple">+</span>
+                  <span className="bg-[#111111] rounded-md px-0.5 text-[8px] font-bold text-[#E88B3E]">+</span>
                 </button>
                 <input ref={colorPickerRef} type="color" value={colorDraft} onChange={(e) => setColorDraft(e.target.value)} className="hidden" />
               </div>
@@ -683,28 +683,28 @@ export default function ProfilePage() {
                 className="w-full h-8 rounded-lg appearance-none cursor-pointer"
                 style={{ background: "linear-gradient(to right, hsl(0,45%,60%), hsl(30,45%,60%), hsl(60,45%,60%), hsl(90,45%,60%), hsl(120,45%,60%), hsl(150,45%,60%), hsl(180,45%,60%), hsl(210,45%,60%), hsl(240,45%,60%), hsl(270,45%,60%), hsl(300,45%,60%), hsl(330,45%,60%), hsl(360,45%,60%))" }}
               />
-              <p className="text-[10px] text-soft-muted-light mt-1">Slide to pick any color</p>
+              <p className="text-[10px] text-[#A0A0A0] mt-1">Slide to pick any color</p>
             </div>
 
             {/* Name */}
             <div className="mb-3">
-              <label className="text-[11px] text-soft-text-secondary font-semibold uppercase tracking-wider block mb-1.5">Display Name</label>
-              <input type="text" value={nameDraft} onChange={(e) => setNameDraft(e.target.value)} maxLength={30} placeholder="Your name" className="w-full bg-soft-lavender-bg rounded-xl px-4 py-3 text-[14px] text-soft-purple-deeper font-medium border border-soft-lavender-border outline-none focus:ring-2 focus:ring-soft-purple/20" />
+              <label className="text-[11px] text-[#C0C0C0] font-semibold uppercase tracking-wider block mb-1.5">Display Name</label>
+              <input type="text" value={nameDraft} onChange={(e) => setNameDraft(e.target.value)} maxLength={30} placeholder="Your name" className="w-full bg-[#1A1A1A] rounded-xl px-4 py-3 text-[14px] text-white font-medium border border-[#1E1E1E] outline-none focus:ring-2 focus:ring-[#E88B3E]/20" />
             </div>
 
             {/* Username */}
             <div className="mb-6">
-              <label className="text-[11px] text-soft-text-secondary font-semibold uppercase tracking-wider block mb-1.5">Username</label>
-              <div className="flex items-center bg-soft-lavender-bg rounded-xl border border-soft-lavender-border focus-within:ring-2 focus-within:ring-soft-purple/20">
-                <span className="text-[14px] text-soft-muted pl-4 font-medium">@</span>
-                <input type="text" value={usernameDraft} onChange={(e) => setUsernameDraft(e.target.value.toLowerCase().replace(/[^a-z0-9._]/g, ""))} maxLength={20} placeholder="username" className="flex-1 bg-transparent py-3 pr-4 pl-0.5 text-[14px] text-soft-purple-deeper font-medium outline-none" />
+              <label className="text-[11px] text-[#C0C0C0] font-semibold uppercase tracking-wider block mb-1.5">Username</label>
+              <div className="flex items-center bg-[#1A1A1A] rounded-xl border border-[#1E1E1E] focus-within:ring-2 focus-within:ring-[#E88B3E]/20">
+                <span className="text-[14px] text-[#C0C0C0] pl-4 font-medium">@</span>
+                <input type="text" value={usernameDraft} onChange={(e) => setUsernameDraft(e.target.value.toLowerCase().replace(/[^a-z0-9._]/g, ""))} maxLength={20} placeholder="username" className="flex-1 bg-transparent py-3 pr-4 pl-0.5 text-[14px] text-white font-medium outline-none" />
               </div>
-              <p className="text-[10px] text-soft-muted-light mt-1">Letters, numbers, dots, and underscores only</p>
+              <p className="text-[10px] text-[#A0A0A0] mt-1">Letters, numbers, dots, and underscores only</p>
             </div>
 
             <div className="flex gap-3">
-              <button onClick={() => setEditingProfile(false)} className="flex-1 py-3 rounded-xl border border-soft-lavender text-[13px] font-semibold text-soft-muted hover:bg-soft-lavender-bg transition-colors">Cancel</button>
-              <button onClick={saveProfileEdits} className="flex-1 py-3 rounded-xl bg-soft-purple text-white text-[13px] font-semibold hover:bg-soft-purple-dark transition-colors">Save</button>
+              <button onClick={() => setEditingProfile(false)} className="flex-1 py-3 rounded-xl border border-[#2A2A2A] text-[13px] font-semibold text-[#C0C0C0] hover:bg-[#1A1A1A] transition-colors">Cancel</button>
+              <button onClick={saveProfileEdits} className="flex-1 py-3 rounded-xl bg-[#E88B3E] text-white text-[13px] font-semibold hover:bg-[#CC5C3F] transition-colors">Save</button>
             </div>
           </div>
         </div>
