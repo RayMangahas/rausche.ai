@@ -24,9 +24,9 @@
 
   /* Text */
   --color-r-text: #F0F0F0;
-  --color-r-text-secondary: #999999;
-  --color-r-text-muted: #666666;
-  --color-r-text-dim: #444444;
+  --color-r-text-secondary: #B0B0B0;
+  --color-r-text-muted: #888888;
+  --color-r-text-dim: #666666;
 
   /* Legacy compat */
   --color-soft-purple: #E88B3E;
@@ -39,9 +39,9 @@
   --color-soft-lavender-border: #1E1E1E;
   --color-soft-gold: #F5A623;
   --color-soft-gold-warm: #D4924A;
-  --color-soft-muted: #999999;
-  --color-soft-muted-light: #666666;
-  --color-soft-text-secondary: #888888;
+  --color-soft-muted: #B0B0B0;
+  --color-soft-muted-light: #888888;
+  --color-soft-text-secondary: #A0A0A0;
   --color-soft-online: #4CAF50;
 
   --font-display: "Sora", sans-serif;
