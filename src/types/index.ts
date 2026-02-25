@@ -21,8 +21,12 @@ export interface PingState {
 export interface LiveRoom {
   id: number;
   name: string;
-  people: number;
-  icon: string;
+  host: string;
+  listeners: number;
+  guests: number;
+  maxGuests: number;
+  likes: number;
+  comments: number;
   community: string;
 }
 

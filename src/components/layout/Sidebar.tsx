@@ -48,16 +48,15 @@ export default function Sidebar() {
         <p className="text-[10px] font-bold text-r-text-muted uppercase tracking-wider mb-2">Your communities</p>
         <div className="flex flex-col gap-1">
           {[
-            { icon: "🌙", name: "Can't Sleep Club" },
-            { icon: "📚", name: "First Gen Students" },
-            { icon: "🧠", name: "Founder Therapy" },
-            { icon: "💛", name: "Anxious but Trying" },
-            { icon: "✨", name: "Rausche" },
-          ].map((c) => (
-            <button key={c.name}
+            "Can't Sleep Club",
+            "First Gen Students",
+            "Founder Therapy",
+            "Anxious but Trying",
+            "Rausche",
+          ].map((name) => (
+            <button key={name}
               className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-left cursor-pointer border-none bg-transparent hover:bg-r-card transition-colors">
-              <span className="text-base">{c.icon}</span>
-              <span className="text-[12.5px] font-body font-medium text-r-text-secondary truncate">{c.name}</span>
+              <span className="text-[12.5px] font-body text-r-text-secondary truncate">{name}</span>
             </button>
           ))}
         </div>
