@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useState, useEffect, useCallback, ReactNode } from "react";
+import { createContext, useContext, useState, useEffect, useRef, useCallback, ReactNode } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useAuth } from "@/lib/AuthContext";
 
@@ -20,7 +20,7 @@ interface ProfileData {
 interface ProfileContextType {
   profile: ProfileData;
   setProfile: (data: Partial<ProfileData>) => void;
-  saveProfile: () => Promise<void>;
+  saveProfile: (overrideData?: Partial<ProfileData>) => Promise<void>;
   loaded: boolean;
 }
 
@@ -45,12 +45,16 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
   const { user, loading: authLoading } = useAuth();
   const [profile, setProfileState] = useState<ProfileData>(defaultProfile);
   const [loaded, setLoaded] = useState(false);
+  
+  // Keep a ref that always has the latest profile
+  const profileRef = useRef<ProfileData>(defaultProfile);
 
   useEffect(() => {
     if (authLoading) return;
 
     if (!user) {
       setProfileState(defaultProfile);
+      profileRef.current = defaultProfile;
       setLoaded(true);
       return;
     }
@@ -83,7 +87,7 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
         }
 
         if (data) {
-          setProfileState({
+          const loaded: ProfileData = {
             name: data.display_name || "",
             username: data.username || "",
             avatarEmoji: data.avatar_emoji || "😊",
@@ -94,7 +98,9 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
             q1: data.q1 || "",
             q2: data.q2 || "",
             qualities: data.qualities || ["", "", ""],
-          });
+          };
+          setProfileState(loaded);
+          profileRef.current = loaded;
         }
       } catch (err) {
         console.error("Failed to load profile:", err);
@@ -106,34 +112,44 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
   }, [user, authLoading]);
 
   const setProfile = (data: Partial<ProfileData>) => {
-    setProfileState((prev) => ({ ...prev, ...data }));
+    setProfileState((prev) => {
+      const updated = { ...prev, ...data };
+      profileRef.current = updated;
+      return updated;
+    });
   };
 
-  const saveProfile = useCallback(async () => {
+  // Save profile — optionally pass override data to merge before saving
+  const saveProfile = useCallback(async (overrideData?: Partial<ProfileData>) => {
     if (!user) return;
 
-    let currentProfile: ProfileData = defaultProfile;
-    setProfileState((prev) => {
-      currentProfile = prev;
-      return prev;
-    });
+    // If override data passed, merge it first
+    if (overrideData) {
+      const updated = { ...profileRef.current, ...overrideData };
+      profileRef.current = updated;
+      setProfileState(updated);
+    }
+
+    const p = profileRef.current;
+    console.log("Saving profile to Supabase:", p);
 
     try {
       const { error } = await supabase.from("profiles").upsert({
         id: user.id,
-        display_name: currentProfile.name,
-        username: currentProfile.username,
-        avatar_emoji: currentProfile.avatarEmoji,
-        avatar_color: currentProfile.avatarColor,
-        avatar_type: currentProfile.avatarType,
-        avatar_text: currentProfile.avatarText,
-        avatar_photo: currentProfile.avatarPhoto,
-        q1: currentProfile.q1,
-        q2: currentProfile.q2,
-        qualities: currentProfile.qualities,
+        display_name: p.name,
+        username: p.username,
+        avatar_emoji: p.avatarEmoji,
+        avatar_color: p.avatarColor,
+        avatar_type: p.avatarType,
+        avatar_text: p.avatarText,
+        avatar_photo: p.avatarPhoto,
+        q1: p.q1,
+        q2: p.q2,
+        qualities: p.qualities,
         updated_at: new Date().toISOString(),
       });
       if (error) console.error("Error saving profile:", error);
+      else console.log("Profile saved successfully");
     } catch (err) {
       console.error("Failed to save profile:", err);
     }

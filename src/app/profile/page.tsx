@@ -248,15 +248,16 @@ export default function ProfilePage() {
   };
 
   const saveProfileEdits = () => {
-    setProfile({
+    const updates = {
       name: nameDraft, username: usernameDraft,
       avatarEmoji: emojiDraft, avatarColor: colorDraft,
       avatarType: avatarTypeDraft, avatarText: avatarTextDraft,
       avatarPhoto: avatarPhotoDraft,
-    });
+    };
+    setProfile(updates);
     setEditingProfile(false);
-    // Persist to Supabase (reads latest state internally)
-    setTimeout(() => saveProfile(), 200);
+    // Pass data directly to avoid stale state
+    saveProfile(updates);
   };
 
   const Avatar = ({ size, fontSize }: { size: string; fontSize: string }) => {
