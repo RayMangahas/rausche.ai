@@ -293,7 +293,7 @@ export default function ProfilePage() {
                 key={echo.id}
                 onClick={() => setViewingEcho(echo)}
                 className="flex-shrink-0 w-[140px] h-[130px] rounded-2xl p-3 flex flex-col justify-between text-left cursor-pointer border border-[#1E1E1E] hover:shadow-md transition-all relative overflow-hidden"
-                style={{ background: echo.type === "voice" ? `linear-gradient(135deg, #1A1A1A, #111111)` : "#0A0A0A" }}
+                style={{ background: "#111111" }}
               >
                 <div>
                   <span className="text-sm">{echo.type === "voice" ? "🎙️" : "💬"}</span>
