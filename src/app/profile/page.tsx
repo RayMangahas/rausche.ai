@@ -48,8 +48,17 @@ const PRESET_COLORS = [
 ];
 
 export default function ProfilePage() {
-  const { profile, setProfile, saveProfile } = useProfile();
+  const { profile, setProfile, saveProfile, loaded } = useProfile();
   const { signOut } = useAuth();
+
+  // Show loading state while profile loads from Supabase
+  if (!loaded) {
+    return (
+      <div className="px-5 pt-6 pb-24 flex items-center justify-center min-h-[60vh]">
+        <p className="text-[#C0C0C0] text-sm">Loading profile...</p>
+      </div>
+    );
+  }
 
   const [nameDraft, setNameDraft] = useState(profile.name);
   const [usernameDraft, setUsernameDraft] = useState(profile.username);
@@ -220,8 +229,8 @@ export default function ProfilePage() {
       avatarPhoto: avatarPhotoDraft,
     });
     setEditingProfile(false);
-    // Persist to Supabase
-    setTimeout(() => saveProfile(), 100);
+    // Persist to Supabase (reads latest state internally)
+    setTimeout(() => saveProfile(), 200);
   };
 
   const Avatar = ({ size, fontSize }: { size: string; fontSize: string }) => {
