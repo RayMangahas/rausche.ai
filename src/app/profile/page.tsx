@@ -3,6 +3,8 @@
 import { useState, useRef, useEffect } from "react";
 import { useProfile } from "@/lib/ProfileContext";
 import { useAuth } from "@/lib/AuthContext";
+import ImageCropper from "@/components/ImageCropper";
+import { uploadAvatar, cropImageToBlob } from "@/lib/avatarUpload";
 
 interface Echo {
   id: number;
@@ -49,7 +51,7 @@ const PRESET_COLORS = [
 
 export default function ProfilePage() {
   const { profile, setProfile, saveProfile, loaded } = useProfile();
-  const { signOut } = useAuth();
+  const { signOut, user } = useAuth();
 
   // Show loading state while profile loads from Supabase
   if (!loaded) {
@@ -84,6 +86,10 @@ export default function ProfilePage() {
   const q2FileRef = useRef<HTMLInputElement>(null);
   const colorPickerRef = useRef<HTMLInputElement>(null);
   const avatarPhotoRef = useRef<HTMLInputElement>(null);
+
+  // Cropper state
+  const [cropImageSrc, setCropImageSrc] = useState<string | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
 
   // ─── Echoes (24h stories) ───
   const [echoes, setEchoes] = useState<Echo[]>([
@@ -180,9 +186,29 @@ export default function ProfilePage() {
     const file = e.target.files?.[0];
     if (!file) return;
     const url = URL.createObjectURL(file);
-    setAvatarPhotoDraft(url);
-    setAvatarTypeDraft("photo");
+    setCropImageSrc(url); // Open cropper
     if (avatarPhotoRef.current) avatarPhotoRef.current.value = "";
+  };
+
+  const handleCropConfirm = async (crop: { x: number; y: number; scale: number }) => {
+    if (!cropImageSrc || !user) return;
+    setIsUploading(true);
+    try {
+      const blob = await cropImageToBlob(cropImageSrc, crop, 400);
+      const publicUrl = await uploadAvatar(user.id, blob);
+      if (publicUrl) {
+        setAvatarPhotoDraft(publicUrl);
+        setAvatarTypeDraft("photo");
+      }
+    } catch (err) {
+      console.error("Crop/upload failed:", err);
+    }
+    setCropImageSrc(null);
+    setIsUploading(false);
+  };
+
+  const handleCropCancel = () => {
+    setCropImageSrc(null);
   };
 
   const handleCustomEmoji = () => {
@@ -715,6 +741,25 @@ export default function ProfilePage() {
               <button onClick={() => setEditingProfile(false)} className="flex-1 py-3 rounded-xl border border-[#2A2A2A] text-[13px] font-semibold text-[#C0C0C0] hover:bg-[#1A1A1A] transition-colors">Cancel</button>
               <button onClick={saveProfileEdits} className="flex-1 py-3 rounded-xl bg-[#E88B3E] text-white text-[13px] font-semibold hover:bg-[#CC5C3F] transition-colors">Save</button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Image Cropper Modal */}
+      {cropImageSrc && (
+        <ImageCropper
+          imageSrc={cropImageSrc}
+          onCrop={handleCropConfirm}
+          onCancel={handleCropCancel}
+        />
+      )}
+
+      {/* Uploading overlay */}
+      {isUploading && (
+        <div className="fixed inset-0 z-[300] flex items-center justify-center" style={{ background: "rgba(0,0,0,0.8)" }}>
+          <div className="text-center">
+            <div className="w-8 h-8 border-2 border-[#E88B3E] border-t-transparent rounded-full animate-spin mx-auto mb-3" />
+            <p className="text-white text-sm">Uploading photo...</p>
           </div>
         </div>
       )}
