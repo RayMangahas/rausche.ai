@@ -41,10 +41,10 @@ const POPULAR_EMOJIS = [
 ];
 
 const PRESET_COLORS = [
-  "#9B6BC2", "#B87FD6", "#7FB8D6", "#D6A87F",
-  "#7FD6A8", "#D67FA8", "#A87FD6", "#6B9BC2",
-  "#C27F7F", "#7FC2A8", "#E8A0BF", "#A0C4E8",
-  "#B5E8A0", "#E8D4A0",
+  "#E88B3E", "#F5A623", "#CC5C3F", "#E85D3A",
+  "#D4924A", "#B86E3A", "#FF6B35", "#E8443A",
+  "#FFB347", "#FF8C42", "#D4553A", "#C97B3A",
+  "#FF9F1C", "#E87040",
 ];
 
 export default function ProfilePage() {
@@ -679,9 +679,9 @@ export default function ProfilePage() {
               </div>
               <input type="range" min="0" max="360"
                 value={(() => { const hex = colorDraft.replace("#", ""); const r = parseInt(hex.substring(0, 2), 16) / 255; const g = parseInt(hex.substring(2, 4), 16) / 255; const b = parseInt(hex.substring(4, 6), 16) / 255; const max = Math.max(r, g, b), min = Math.min(r, g, b); let h = 0; if (max !== min) { const d = max - min; if (max === r) h = ((g - b) / d + (g < b ? 6 : 0)) * 60; else if (max === g) h = ((b - r) / d + 2) * 60; else h = ((r - g) / d + 4) * 60; } return Math.round(h); })()}
-                onChange={(e) => { const h = parseInt(e.target.value); const s = 0.45, l = 0.60; const hueToRgb = (p: number, q: number, t: number) => { if (t < 0) t += 1; if (t > 1) t -= 1; if (t < 1/6) return p + (q-p)*6*t; if (t < 1/2) return q; if (t < 2/3) return p + (q-p)*(2/3-t)*6; return p; }; const q = l < 0.5 ? l*(1+s) : l+s-l*s; const p = 2*l-q; const r = Math.round(hueToRgb(p,q,h/360+1/3)*255); const g = Math.round(hueToRgb(p,q,h/360)*255); const b = Math.round(hueToRgb(p,q,h/360-1/3)*255); setColorDraft(`#${r.toString(16).padStart(2,"0")}${g.toString(16).padStart(2,"0")}${b.toString(16).padStart(2,"0")}`); }}
+                onChange={(e) => { const h = parseInt(e.target.value); const s = 0.85, l = 0.55; const hueToRgb = (p: number, q: number, t: number) => { if (t < 0) t += 1; if (t > 1) t -= 1; if (t < 1/6) return p + (q-p)*6*t; if (t < 1/2) return q; if (t < 2/3) return p + (q-p)*(2/3-t)*6; return p; }; const q = l < 0.5 ? l*(1+s) : l+s-l*s; const p = 2*l-q; const r = Math.round(hueToRgb(p,q,h/360+1/3)*255); const g = Math.round(hueToRgb(p,q,h/360)*255); const b = Math.round(hueToRgb(p,q,h/360-1/3)*255); setColorDraft(`#${r.toString(16).padStart(2,"0")}${g.toString(16).padStart(2,"0")}${b.toString(16).padStart(2,"0")}`); }}
                 className="w-full h-8 rounded-lg appearance-none cursor-pointer"
-                style={{ background: "linear-gradient(to right, hsl(0,45%,60%), hsl(30,45%,60%), hsl(60,45%,60%), hsl(90,45%,60%), hsl(120,45%,60%), hsl(150,45%,60%), hsl(180,45%,60%), hsl(210,45%,60%), hsl(240,45%,60%), hsl(270,45%,60%), hsl(300,45%,60%), hsl(330,45%,60%), hsl(360,45%,60%))" }}
+                style={{ background: "linear-gradient(to right, hsl(0,85%,55%), hsl(30,85%,55%), hsl(60,85%,55%), hsl(90,85%,55%), hsl(120,85%,55%), hsl(150,85%,55%), hsl(180,85%,55%), hsl(210,85%,55%), hsl(240,85%,55%), hsl(270,85%,55%), hsl(300,85%,55%), hsl(330,85%,55%), hsl(360,85%,55%))" }}
               />
               <p className="text-[10px] text-[#A0A0A0] mt-1">Slide to pick any color</p>
             </div>
