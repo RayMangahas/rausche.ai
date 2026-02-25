@@ -41,10 +41,10 @@ const POPULAR_EMOJIS = [
 ];
 
 const PRESET_COLORS = [
-  "#E88B3E", "#F5A623", "#CC5C3F", "#E85D3A",
-  "#D4924A", "#B86E3A", "#FF6B35", "#E8443A",
-  "#FFB347", "#FF8C42", "#D4553A", "#C97B3A",
-  "#FF9F1C", "#E87040",
+  "#E88B3E", "#E8443A", "#D946EF", "#8B5CF6",
+  "#3B82F6", "#06B6D4", "#10B981", "#22C55E",
+  "#EAB308", "#F97316", "#EC4899", "#6366F1",
+  "#14B8A6",
 ];
 
 export default function ProfilePage() {
@@ -668,7 +668,7 @@ export default function ProfilePage() {
             {/* Color picker */}
             <div className="mb-4">
               <label className="text-[11px] text-[#C0C0C0] font-semibold uppercase tracking-wider block mb-1.5">{avatarTypeDraft === "photo" ? "Profile accent color" : "Avatar color"}</label>
-              <div className="flex flex-wrap gap-2 mb-2.5">
+              <div className="grid grid-cols-7 gap-2 mb-2.5">
                 {PRESET_COLORS.map((color) => (
                   <button key={color} onClick={() => setColorDraft(color)} className={`w-9 h-9 rounded-lg transition-all ${colorDraft === color ? "scale-110 shadow-md ring-2 ring-[#E88B3E] ring-offset-2" : "hover:scale-105"}`} style={{ backgroundColor: color }} />
                 ))}
