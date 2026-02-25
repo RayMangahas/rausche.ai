@@ -123,9 +123,9 @@ export const PING_PROMPTS = [
 ];
 
 export const ACTIVE_ROOMS: LiveRoom[] = [
-  { id: 1, name: "Late Night Chill", host: "Maya", listeners: 47, guests: 2, maxGuests: 4, likes: 128, comments: 34, community: "Can't Sleep Club" },
-  { id: 2, name: "Study Together", host: "Jordan", listeners: 23, guests: 1, maxGuests: 3, likes: 56, comments: 12, community: "First Gen Students" },
-  { id: 3, name: "New here 👋", host: "Alex", listeners: 15, guests: 0, maxGuests: 5, likes: 22, comments: 8, community: "Rausche" },
+  { id: 1, name: "Late Night Chill", host: "Maya", hostColor: "#E88B3E", hostInitials: "M", listeners: 47, guests: 2, maxGuests: 4, likes: 128, comments: 34, community: "Can't Sleep Club" },
+  { id: 2, name: "Study Together", host: "Jordan", hostColor: "#D4924A", hostInitials: "J", listeners: 23, guests: 1, maxGuests: 3, likes: 56, comments: 12, community: "First Gen Students" },
+  { id: 3, name: "New here", host: "Alex", hostColor: "#B86E3A", hostInitials: "A", listeners: 15, guests: 0, maxGuests: 5, likes: 22, comments: 8, community: "Rausche" },
 ];
 
 export const COMMUNITY_POSTS: CommunityPost[] = [

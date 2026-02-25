@@ -22,6 +22,8 @@ export interface LiveRoom {
   id: number;
   name: string;
   host: string;
+  hostColor: string;
+  hostInitials: string;
   listeners: number;
   guests: number;
   maxGuests: number;
