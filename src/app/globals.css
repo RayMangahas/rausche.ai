@@ -62,6 +62,15 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+* {
+  font-weight: 100 !important;
+}
+
+/* Slightly heavier for key UI elements */
+h1, h2, h3, button, [class*="Join"] {
+  font-weight: 200 !important;
+}
+
 .scrollbar-hide {
   -ms-overflow-style: none;
   scrollbar-width: none;
