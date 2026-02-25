@@ -274,7 +274,7 @@ export default function ProfilePage() {
         <div className="flex items-center justify-between mb-4">
           <div>
             <h2 className="font-display font-bold text-[15px] text-white flex items-center gap-2">
-              🔊 My Echoes
+              My Echoes
             </h2>
             <p className="text-[11px] text-[#C0C0C0] font-medium mt-0.5">Voice or text · fades in 24h</p>
           </div>
@@ -296,7 +296,7 @@ export default function ProfilePage() {
                 style={{ background: "#111111" }}
               >
                 <div>
-                  <span className="text-sm">{echo.type === "voice" ? "🎙️" : "💬"}</span>
+                  <span className="text-sm"></span>
                   <p className="text-[11.5px] font-medium text-white mt-1.5 line-clamp-3 leading-snug">
                     {echo.content}
                   </p>
@@ -310,7 +310,7 @@ export default function ProfilePage() {
           </div>
         ) : (
           <div className="text-center py-6">
-            <p className="text-3xl mb-2">🔊</p>
+            
             <p className="text-[13px] text-[#C0C0C0] font-medium">No echoes yet</p>
             <p className="text-[11px] text-[#A0A0A0] mt-1">Share a voice or text echo — it disappears in 24h</p>
           </div>
@@ -330,13 +330,13 @@ export default function ProfilePage() {
                 onClick={() => { setEchoType("text"); if (isRecording) stopRecording(); }}
                 className={`flex-1 py-2.5 rounded-lg text-[12px] font-semibold transition-all flex items-center justify-center gap-2 ${echoType === "text" ? "bg-[#1A1A1A] text-[#E88B3E] shadow-sm" : "text-[#C0C0C0] hover:text-[#E0E0E0]"}`}
               >
-                💬 Text
+                Text
               </button>
               <button
                 onClick={() => setEchoType("voice")}
                 className={`flex-1 py-2.5 rounded-lg text-[12px] font-semibold transition-all flex items-center justify-center gap-2 ${echoType === "voice" ? "bg-[#1A1A1A] text-[#E88B3E] shadow-sm" : "text-[#C0C0C0] hover:text-[#E0E0E0]"}`}
               >
-                🎙️ Voice
+                Voice
               </button>
             </div>
 
@@ -367,7 +367,7 @@ export default function ProfilePage() {
                           : "bg-[#1A1A1A] text-[#E88B3E] hover:bg-[#2A2A2A] hover:shadow-md"
                       }`}
                     >
-                      {isRecording ? "⏹" : "🎙️"}
+                      {isRecording ? "⏹" : ""}
                     </button>
                     <p className="text-[13px] text-white font-semibold mt-3">
                       {isRecording ? `Recording... ${Math.floor(recordingTime / 60)}:${(recordingTime % 60).toString().padStart(2, "0")}` : "Tap to record"}
@@ -379,7 +379,7 @@ export default function ProfilePage() {
                 ) : (
                   <>
                     <div className="bg-[#1A1A1A] rounded-2xl p-4 mb-3">
-                      <p className="text-sm mb-2">🎙️ Voice echo ready</p>
+                      <p className="text-sm mb-2">Voice echo ready</p>
                       <audio src={recordedAudioUrl} controls className="w-full" />
                       <p className="text-[11px] text-[#C0C0C0] mt-2">{Math.floor(recordingTime / 60)}:{(recordingTime % 60).toString().padStart(2, "0")} recorded</p>
                     </div>
@@ -387,7 +387,7 @@ export default function ProfilePage() {
                       onClick={() => { setRecordedAudioUrl(null); setRecordingTime(0); }}
                       className="text-[12px] text-[#C0C0C0] font-semibold hover:text-red-500 transition-colors"
                     >
-                      🗑️ Discard & re-record
+                      Discard & re-record
                     </button>
                   </>
                 )}
@@ -449,7 +449,7 @@ export default function ProfilePage() {
                 <p className="text-white text-lg font-medium leading-relaxed">{viewingEcho.content}</p>
               ) : (
                 <div>
-                  <span className="text-5xl mb-4 block">🎙️</span>
+                  <span className="text-5xl mb-4 block"></span>
                   {viewingEcho.audioUrl ? (
                     <audio src={viewingEcho.audioUrl} controls className="w-full mt-4" />
                   ) : (
@@ -494,7 +494,7 @@ export default function ProfilePage() {
                 <div className="flex items-center justify-between mt-1.5">
                   <div className="flex items-center gap-2">
                     <p className="text-[10px] text-[#A0A0A0]">{wordCount(q1Draft)} / 200 words</p>
-                    <button onClick={() => q1FileRef.current?.click()} className="text-[11px] text-[#E88B3E] font-semibold flex items-center gap-1 hover:text-[#CC5C3F] transition-colors">📷 Add photo/video</button>
+                    <button onClick={() => q1FileRef.current?.click()} className="text-[11px] text-[#E88B3E] font-semibold flex items-center gap-1 hover:text-[#CC5C3F] transition-colors">Add photo/video</button>
                     <input ref={q1FileRef} type="file" accept="image/*,video/*" className="hidden" onChange={(e) => handleFileSelect(e, setQ1MediaDraft)} />
                   </div>
                   <div className="flex gap-2">
@@ -523,7 +523,7 @@ export default function ProfilePage() {
                 <div className="flex items-center justify-between mt-1.5">
                   <div className="flex items-center gap-2">
                     <p className="text-[10px] text-[#A0A0A0]">{wordCount(q2Draft)} / 200 words</p>
-                    <button onClick={() => q2FileRef.current?.click()} className="text-[11px] text-[#E88B3E] font-semibold flex items-center gap-1 hover:text-[#CC5C3F] transition-colors">📷 Add photo/video</button>
+                    <button onClick={() => q2FileRef.current?.click()} className="text-[11px] text-[#E88B3E] font-semibold flex items-center gap-1 hover:text-[#CC5C3F] transition-colors">Add photo/video</button>
                     <input ref={q2FileRef} type="file" accept="image/*,video/*" className="hidden" onChange={(e) => handleFileSelect(e, setQ2MediaDraft)} />
                   </div>
                   <div className="flex gap-2">
@@ -575,15 +575,15 @@ export default function ProfilePage() {
 
       {/* Settings */}
       <div className="bg-[#111111] rounded-softer border border-[#1E1E1E] overflow-hidden">
-        {[{ label: "Edit Folder", icon: "📁" }, { label: "Notification Preferences", icon: "🔔" }, { label: "Privacy & Safety", icon: "🔒" }, { label: "Rausche+ Subscription", icon: "⭐" }, { label: "Help & Feedback", icon: "💬" }].map((item, i) => (
+        {[{ label: "Edit Folder", icon: "" }, { label: "Notification Preferences", icon: "" }, { label: "Privacy & Safety", icon: "" }, { label: "Rausche+ Subscription", icon: "" }, { label: "Help & Feedback", icon: "" }].map((item, i) => (
           <div key={item.label} className={`flex items-center gap-3 px-4 py-3.5 cursor-pointer hover:bg-[#1A1A1A] transition-colors ${i < 4 ? "border-b border-[#1E1E1E]" : ""}`}>
-            <span className="text-lg">{item.icon}</span>
+            
             <span className="text-sm font-semibold text-white flex-1">{item.label}</span>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#666666" strokeWidth="2" strokeLinecap="round"><path d="M9 18l6-6-6-6" /></svg>
           </div>
         ))}
       </div>
-      <p className="text-center text-[11px] text-[#A0A0A0] mt-6 mb-2">Rausche v0.1.0 · Made with 🧡</p>
+      <p className="text-center text-[11px] text-[#A0A0A0] mt-6 mb-2">Rausche v0.1.0</p>
 
       {/* Sign Out */}
       <button
@@ -651,7 +651,7 @@ export default function ProfilePage() {
               <div className="mb-4">
                 <button onClick={() => avatarPhotoRef.current?.click()}
                   className="w-full py-3 rounded-xl border-2 border-dashed text-[13px] font-semibold transition-colors cursor-pointer flex items-center justify-center gap-2 border-[#2A2A2A] text-[#E88B3E] bg-[#1A1A1A] hover:bg-[#2A2A2A]">
-                  📷 Upload a photo
+                  Upload a photo
                 </button>
                 <input ref={avatarPhotoRef} type="file" accept="image/*" className="hidden" onChange={handleAvatarPhotoUpload} />
 
