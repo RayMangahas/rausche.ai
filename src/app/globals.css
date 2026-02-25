@@ -23,25 +23,25 @@
   --color-r-border-light: #2A2A2A;
 
   /* Text */
-  --color-r-text: #F0F0F0;
-  --color-r-text-secondary: #CCCCCC;
-  --color-r-text-muted: #AAAAAA;
-  --color-r-text-dim: #888888;
+  --color-r-text: #FFFFFF;
+  --color-r-text-secondary: #E0E0E0;
+  --color-r-text-muted: #C0C0C0;
+  --color-r-text-dim: #A0A0A0;
 
   /* Legacy compat */
   --color-soft-purple: #E88B3E;
   --color-soft-purple-dark: #CC5C3F;
-  --color-soft-purple-deep: #F0F0F0;
-  --color-soft-purple-deeper: #F0F0F0;
+  --color-soft-purple-deep: #FFFFFF;
+  --color-soft-purple-deeper: #FFFFFF;
   --color-soft-lavender: #2A2A2A;
   --color-soft-lavender-light: #1E1E1E;
   --color-soft-lavender-bg: #111111;
   --color-soft-lavender-border: #1E1E1E;
   --color-soft-gold: #F5A623;
   --color-soft-gold-warm: #D4924A;
-  --color-soft-muted: #CCCCCC;
-  --color-soft-muted-light: #AAAAAA;
-  --color-soft-text-secondary: #BBBBBB;
+  --color-soft-muted: #E0E0E0;
+  --color-soft-muted-light: #C0C0C0;
+  --color-soft-text-secondary: #D0D0D0;
   --color-soft-online: #4CAF50;
 
   --font-display: "Sora", sans-serif;
@@ -54,7 +54,7 @@
 
 body {
   background: #000000;
-  color: #F0F0F0;
+  color: #FFFFFF;
   margin: 0;
   font-family: "Sora", sans-serif;
   font-weight: 100;
