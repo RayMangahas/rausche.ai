@@ -1,4 +1,4 @@
-import { OnlineUser, LiveRoom, CommunityPost } from "@/types";
+import { OnlineUser, LiveRoom, Community } from "@/types";
 
 // ─── Online Users ─────────────────────────────────────────
 
@@ -128,37 +128,37 @@ export const ACTIVE_ROOMS: LiveRoom[] = [
   { id: 3, name: "New here", host: "Alex", hostColor: "#B86E3A", hostInitials: "A", listeners: 15, guests: 0, maxGuests: 5, likes: 22, comments: 8, community: "Rausche" },
 ];
 
-export const COMMUNITY_POSTS: CommunityPost[] = [
+export const TRENDING_COMMUNITIES: Community[] = [
   {
-    id: 1, community: "Can't Sleep Club", memberCount: "2.3K", icon: "🌙",
-    color: "#1A1008",
-    post: {
-      prompt: "What's keeping you up tonight?", responseCount: 47, activeNow: 12,
-      topResponses: ["Overthinking a conversation from 3 days ago", "My brain decided now is the time to plan my whole future"],
-    },
+    id: 1, name: "Can't Sleep Club", members: "2.3K",
+    liveListeners: 89, liveHosts: 3, liveGuests: 7,
+    topRooms: [
+      { id: 10, name: "Late Night Chill", host: "Maya", hostColor: "#E88B3E", hostInitials: "M", listeners: 47, guests: 2, maxGuests: 4, likes: 128, comments: 34, community: "Can't Sleep Club" },
+      { id: 11, name: "3am Thoughts", host: "Sam", hostColor: "#CC5C3F", hostInitials: "S", listeners: 28, guests: 1, maxGuests: 3, likes: 64, comments: 19, community: "Can't Sleep Club" },
+    ],
   },
   {
-    id: 2, community: "First Gen Students", memberCount: "1.8K", icon: "🎓",
-    color: "#0F1A12",
-    post: {
-      prompt: "What's something you wish someone told you before college?", responseCount: 83, activeNow: 8,
-      topResponses: ["It's okay to not know the unwritten rules", "Office hours are literally free mentoring"],
-    },
+    id: 2, name: "First Gen Students", members: "1.8K",
+    liveListeners: 54, liveHosts: 2, liveGuests: 4,
+    topRooms: [
+      { id: 20, name: "Study Together", host: "Jordan", hostColor: "#D4924A", hostInitials: "J", listeners: 23, guests: 1, maxGuests: 3, likes: 56, comments: 12, community: "First Gen Students" },
+      { id: 21, name: "Office Hours Q&A", host: "Rin", hostColor: "#F5A623", hostInitials: "R", listeners: 18, guests: 2, maxGuests: 4, likes: 41, comments: 8, community: "First Gen Students" },
+    ],
   },
   {
-    id: 3, community: "Founder Therapy", memberCount: "956", icon: "🧠",
-    color: "#1A1208",
-    post: {
-      prompt: "Biggest lesson from your last failure?", responseCount: 31, activeNow: 5,
-      topResponses: ["The idea wasn't the problem, the timing was", "I confused being busy with making progress"],
-    },
+    id: 3, name: "Founder Therapy", members: "956",
+    liveListeners: 31, liveHosts: 1, liveGuests: 3,
+    topRooms: [
+      { id: 30, name: "Failure Stories", host: "Drew", hostColor: "#9B5C3A", hostInitials: "D", listeners: 19, guests: 2, maxGuests: 4, likes: 37, comments: 11, community: "Founder Therapy" },
+      { id: 31, name: "Pitch Practice", host: "Alex", hostColor: "#B86E3A", hostInitials: "A", listeners: 12, guests: 1, maxGuests: 2, likes: 18, comments: 5, community: "Founder Therapy" },
+    ],
   },
   {
-    id: 4, community: "Anxious but Trying", memberCount: "4.1K", icon: "💛",
-    color: "#14100A",
-    post: {
-      prompt: "One small win from today?", responseCount: 112, activeNow: 22,
-      topResponses: ["Made a phone call I'd been avoiding for 2 weeks", "Went to the gym even though I almost didn't"],
-    },
+    id: 4, name: "Anxious but Trying", members: "4.1K",
+    liveListeners: 112, liveHosts: 4, liveGuests: 9,
+    topRooms: [
+      { id: 40, name: "Small Wins Circle", host: "Maya", hostColor: "#E88B3E", hostInitials: "M", listeners: 52, guests: 3, maxGuests: 5, likes: 203, comments: 67, community: "Anxious but Trying" },
+      { id: 41, name: "Vent Session", host: "Rin", hostColor: "#F5A623", hostInitials: "R", listeners: 34, guests: 2, maxGuests: 3, likes: 89, comments: 28, community: "Anxious but Trying" },
+    ],
   },
 ];

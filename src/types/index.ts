@@ -34,18 +34,14 @@ export interface LiveRoom {
 
 // ─── Community Types ─────────────────────────────────────
 
-export interface CommunityPost {
+export interface Community {
   id: number;
-  community: string;
-  memberCount: string;
-  icon: string;
-  color: string;
-  post: {
-    prompt: string;
-    responseCount: number;
-    activeNow: number;
-    topResponses: string[];
-  };
+  name: string;
+  members: string;
+  liveListeners: number;
+  liveHosts: number;
+  liveGuests: number;
+  topRooms: LiveRoom[];
 }
 
 // ─── Navigation ──────────────────────────────────────────
