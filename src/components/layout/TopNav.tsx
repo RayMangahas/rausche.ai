@@ -37,7 +37,7 @@ export default function TopNav({
           <span className="font-display font-bold text-xl text-r-text tracking-tight">
             Rausche
           </span>
-          <Image src="/logo.png" alt="Rausche logo" width={34} height={34} className="object-contain" />
+          <Image src="/logo.png" alt="Rausche logo" width={44} height={44} className="object-contain" />
         </Link>
 
         {/* Center Search Bar */}
